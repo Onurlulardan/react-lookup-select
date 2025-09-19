@@ -82,12 +82,83 @@ const userMapper = {
 const meta: Meta<typeof LookupSelect> = {
   title: 'Components/LookupSelect/Virtualization',
   component: LookupSelect,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'Virtualization examples demonstrating performance with large datasets (1K-25K records).',
+        component: `
+# Virtualization Examples
+
+Virtualization examples demonstrating performance with large datasets (1K-25K records). Essential for handling large data without performance issues.
+
+## Performance Benefits
+
+- **Memory Efficient**: Only renders visible rows (~15-20 DOM elements)
+- **Smooth Scrolling**: Handles 25K+ records without lag
+- **Fast Search**: Instant filtering even with large datasets
+- **Browser Performance**: Prevents browser freezing with massive data
+
+## When to Use Virtualization
+
+- **1K+ Records**: Recommended for datasets over 1,000 items
+- **5K+ Records**: Essential for datasets over 5,000 items
+- **Performance Critical**: When smooth user experience is required
+
+## Basic Virtualization Usage
+
+\`\`\`tsx
+import { LookupSelect } from '@onurlulardan/react-lookup-select';
+
+// Generate large dataset
+const generateLargeDataset = (size) => {
+  return Array.from({ length: size }, (_, i) => ({
+    id: i + 1,
+    name: \`User \${i + 1}\`,
+    email: \`user\${i + 1}@example.com\`,
+    department: departments[i % departments.length],
+    location: locations[i % locations.length]
+  }));
+};
+
+const largeData = generateLargeDataset(10000); // 10K records
+
+<LookupSelect
+  data={largeData}
+  columns={columns}
+  mapper={mapper}
+  mode="single"
+  returnShape="id-text"
+  virtualization={true}  // Enable virtualization for performance
+  onChange={(selected) => {
+    console.log('Selected from 10K records:', selected);
+  }}
+/>
+\`\`\`
+
+## Performance Comparison
+
+\`\`\`tsx
+// Without virtualization (NOT recommended for large data)
+<LookupSelect
+  data={largeData}
+  virtualization={false}  // Will create 10,000 DOM elements!
+/>
+
+// With virtualization (RECOMMENDED)
+<LookupSelect
+  data={largeData}
+  virtualization={true}   // Creates only ~20 DOM elements
+/>
+\`\`\`
+
+## Best Practices
+
+- Always enable virtualization for datasets > 1000 records
+- Test performance with your actual data size
+- Consider server-side pagination for extremely large datasets (100K+)
+- Use virtualization with custom cell renderers for complex UI
+        `,
       },
     },
   },
@@ -125,6 +196,32 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // 1K records - Small dataset
+//
+// Example usage:
+//
+// const generateLargeDataset = (size) => {
+//   return Array.from({ length: size }, (_, i) => ({
+//     id: i + 1,
+//     name: `User ${i + 1}`,
+//     email: `user${i + 1}@example.com`,
+//     department: departments[i % departments.length],
+//     location: locations[i % locations.length]
+//   }));
+// };
+//
+// const largeData = generateLargeDataset(1000);
+//
+// <LookupSelect
+//   data={largeData}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="single"
+//   returnShape="id-text"
+//   virtualization={true}  // Enable virtualization for performance
+//   onChange={(selected) => {
+//     console.log('Selected from 1K records:', selected);
+//   }}
+// />
 export const SmallDataset_1K: Story = {
   args: {
     data: smallDataset,
@@ -145,6 +242,24 @@ export const SmallDataset_1K: Story = {
 };
 
 // 5K records - Medium dataset
+//
+// Example usage:
+//
+// const mediumData = generateLargeDataset(5000);
+//
+// <LookupSelect
+//   data={mediumData}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="single"
+//   returnShape="id-text"
+//   virtualization={true}  // Essential for 5K+ records
+//   onChange={(selected) => {
+//     console.log('Selected from 5K records:', selected);
+//   }}
+// />
+//
+// Performance tip: Always enable virtualization for datasets > 1000 records
 export const MediumDataset_5K: Story = {
   args: {
     data: mediumDataset,
@@ -165,6 +280,25 @@ export const MediumDataset_5K: Story = {
 };
 
 // 10K records - Large dataset
+//
+// Example usage:
+//
+// const largeData = generateLargeDataset(10000);
+//
+// <LookupSelect
+//   data={largeData}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="single"
+//   returnShape="id-text"
+//   virtualization={true}  // Required for 10K+ records
+//   onChange={(selected) => {
+//     console.log('Selected from 10K records:', selected);
+//   }}
+// />
+//
+// Performance: Virtualization renders only visible rows (~15-20)
+// instead of all 10,000 DOM elements
 export const LargeDataset_10K: Story = {
   args: {
     data: largeDataset,
@@ -185,6 +319,25 @@ export const LargeDataset_10K: Story = {
 };
 
 // 25K records - Extra large dataset
+//
+// Example usage:
+//
+// const extraLargeData = generateLargeDataset(25000);
+//
+// <LookupSelect
+//   data={extraLargeData}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="single"
+//   returnShape="id-text"
+//   virtualization={true}  // Critical for 25K+ records
+//   onChange={(selected) => {
+//     console.log('Selected from 25K records:', selected);
+//   }}
+// />
+//
+// Note: Without virtualization, 25K records would create 25,000 DOM elements
+// causing browser performance issues. Virtualization keeps it performant.
 export const ExtraLargeDataset_25K: Story = {
   args: {
     data: extraLargeDataset,

@@ -1,13 +1,14 @@
-import type { Preview } from '@storybook/react-vite'
+import type { Preview } from '@storybook/react-vite';
 
 const preview: Preview = {
   parameters: {
-    controls: {
-      matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+    docs: {
+      toc: true, // Enable table of contents
+      source: {
+        state: 'open', // Show source code by default
       },
     },
+    layout: 'centered',
   },
 };
 

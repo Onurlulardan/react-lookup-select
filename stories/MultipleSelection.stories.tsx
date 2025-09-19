@@ -88,12 +88,71 @@ const employeeMapper = {
 const meta: Meta<typeof LookupSelect> = {
   title: 'Components/LookupSelect/Multiple Selection',
   component: LookupSelect,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'Multiple selection stories showcasing checkbox-based multi-selection capabilities.',
+        component: `
+# Multiple Selection Examples
+
+Multiple selection stories showcasing checkbox-based multi-selection capabilities with various return shapes and configurations.
+
+## Features
+
+- **Checkbox Selection**: Each row has a checkbox for multiple item selection
+- **Select All**: Checkbox in header to select/deselect all items
+- **Tag Display**: Selected items shown as removable tags in trigger
+- **Batch Operations**: Handle multiple selected items at once
+
+## Basic Multiple Selection
+
+\`\`\`tsx
+import { LookupSelect } from '@onurlulardan/react-lookup-select';
+
+const employees = [
+  { empId: 1, name: 'John', surname: 'Doe', department: 'Engineering' },
+  { empId: 2, name: 'Jane', surname: 'Smith', department: 'Marketing' },
+  { empId: 3, name: 'Bob', surname: 'Johnson', department: 'Sales' }
+];
+
+const mapper = {
+  getId: (emp) => emp.empId,
+  getText: (emp) => \`\${emp.name} \${emp.surname}\`
+};
+
+<LookupSelect
+  data={employees}
+  columns={columns}
+  mapper={mapper}
+  mode="multiple"  // Enable multiple selection
+  returnShape="id-text"
+  onChange={(selectedItems) => {
+    // selectedItems = [{ id: 1, text: 'John Doe' }, { id: 2, text: 'Jane Smith' }]
+    console.log('Selected employees:', selectedItems);
+  }}
+/>
+\`\`\`
+
+## With Pre-selected Values
+
+\`\`\`tsx
+<LookupSelect
+  data={employees}
+  columns={columns}
+  mapper={mapper}
+  mode="multiple"
+  returnShape="id-text"
+  value={[  // Pre-selected items
+    { id: 1, text: 'John Doe' },
+    { id: 3, text: 'Bob Johnson' }
+  ]}
+  onChange={(selectedItems) => {
+    console.log('Updated selection:', selectedItems);
+  }}
+/>
+\`\`\`
+        `,
       },
     },
   },
@@ -119,6 +178,31 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Basic multiple selection
+//
+// Example usage:
+//
+// const employees = [
+//   { empId: 1, name: 'John', surname: 'Doe', department: 'Engineering' },
+//   { empId: 2, name: 'Jane', surname: 'Smith', department: 'Marketing' },
+//   { empId: 3, name: 'Bob', surname: 'Johnson', department: 'Sales' }
+// ];
+//
+// const mapper = {
+//   getId: (emp) => emp.empId,
+//   getText: (emp) => `${emp.name} ${emp.surname}`
+// };
+//
+// <LookupSelect
+//   data={employees}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="multiple"  // Enable multiple selection with checkboxes
+//   returnShape="id-text"
+//   onChange={(selectedItems) => {
+//     // selectedItems = [{ id: 1, text: 'John Doe' }, { id: 2, text: 'Jane Smith' }]
+//     console.log('Selected employees:', selectedItems);
+//   }}
+// />
 export const BasicMultiple: Story = {
   args: {
     data: employees,
@@ -138,6 +222,23 @@ export const BasicMultiple: Story = {
 };
 
 // Multiple selection with pre-selected values
+//
+// Example usage:
+//
+// <LookupSelect
+//   data={employees}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="multiple"
+//   returnShape="id-text"
+//   value={[  // Pre-selected employees
+//     { id: 1, text: 'John Doe' },
+//     { id: 3, text: 'Bob Johnson' }
+//   ]}
+//   onChange={(selectedItems) => {
+//     console.log('Updated selection:', selectedItems);
+//   }}
+// />
 export const WithPreselectedValues: Story = {
   args: {
     data: employees,

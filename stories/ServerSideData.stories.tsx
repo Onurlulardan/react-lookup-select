@@ -92,12 +92,97 @@ const createSlowDataSource = (dataset: any[]) =>
 const meta: Meta<typeof LookupSelect> = {
   title: 'Components/LookupSelect/Server-side Data',
   component: LookupSelect,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component:
-          'Server-side data source stories showcasing async data loading with search, pagination, and sorting.',
+        component: `
+# Server-side Data Examples
+
+Server-side data source stories showcasing async data loading with search, pagination, and sorting capabilities.
+
+## Features
+
+- **Async Data Loading**: Load data from server/API endpoints
+- **Search Integration**: Search queries sent to server
+- **Pagination**: Server-side pagination with configurable page sizes
+- **Performance**: Only load data when needed, not all at once
+
+## Basic Server-side Usage
+
+\`\`\`tsx
+import { LookupSelect } from '@onurlulardan/react-lookup-select';
+
+const dataSource = {
+  fetchData: async (query, page, pageSize) => {
+    const response = await fetch(
+      \`/api/customers?query=\${query}&page=\${page}&size=\${pageSize}\`
+    );
+    const data = await response.json();
+    return {
+      data: data.customers,
+      total: data.total,
+      hasMore: data.hasMore
+    };
+  }
+};
+
+<LookupSelect
+  dataSource={dataSource}  // Use server-side data instead of static data
+  columns={columns}
+  mapper={mapper}
+  mode="single"
+  returnShape="id-text"
+  onQueryChange={(searchQuery) => {
+    console.log('User searching for:', searchQuery);
+  }}
+  onChange={(selected) => {
+    console.log('Selected:', selected);
+  }}
+/>
+\`\`\`
+
+## DataSource Interface
+
+\`\`\`tsx
+interface DataSource<T> {
+  fetchData: (query: string, page: number, pageSize: number) => Promise<{
+    data: T[];
+    total: number;
+    hasMore: boolean;
+  }>;
+}
+\`\`\`
+
+## Real API Example
+
+\`\`\`tsx
+const apiDataSource = {
+  fetchData: async (query, page, pageSize) => {
+    try {
+      const params = new URLSearchParams({
+        q: query,
+        page: page.toString(),
+        limit: pageSize.toString()
+      });
+      
+      const response = await fetch(\`https://api.example.com/users?\${params}\`);
+      const result = await response.json();
+      
+      return {
+        data: result.users,
+        total: result.pagination.total,
+        hasMore: result.pagination.hasMore
+      };
+    } catch (error) {
+      console.error('API Error:', error);
+      return { data: [], total: 0, hasMore: false };
+    }
+  }
+};
+\`\`\`
+        `,
       },
     },
   },
@@ -124,6 +209,34 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Basic server-side single selection
+//
+// Example usage:
+//
+// const dataSource = {
+//   fetchData: async (query, page, pageSize) => {
+//     const response = await fetch(`/api/customers?query=${query}&page=${page}&size=${pageSize}`);
+//     const data = await response.json();
+//     return {
+//       data: data.customers,
+//       total: data.total,
+//       hasMore: data.hasMore
+//     };
+//   }
+// };
+//
+// <LookupSelect
+//   dataSource={dataSource}  // Use server-side data source instead of static data
+//   columns={columns}
+//   mapper={mapper}
+//   mode="single"
+//   returnShape="id-text"
+//   onQueryChange={(searchQuery) => {
+//     console.log('User is searching for:', searchQuery);
+//   }}
+//   onChange={(selected) => {
+//     console.log('Selected customer:', selected);
+//   }}
+// />
 export const ServerSideSingle: Story = {
   args: {
     dataSource: createMockDataSource(mockCustomers),
@@ -143,6 +256,24 @@ export const ServerSideSingle: Story = {
 };
 
 // Server-side multiple selection
+//
+// Example usage:
+//
+// <LookupSelect
+//   dataSource={dataSource}
+//   columns={columns}
+//   mapper={mapper}
+//   mode="multiple"  // Multiple selection with server-side data
+//   returnShape="id-text"
+//   onQueryChange={(searchQuery) => {
+//     // Called when user types in search box
+//     console.log('Searching server for:', searchQuery);
+//   }}
+//   onChange={(selectedItems) => {
+//     // selectedItems = [{ id: 1, text: 'Customer A' }, { id: 3, text: 'Customer C' }]
+//     console.log('Selected customers:', selectedItems);
+//   }}
+// />
 export const ServerSideMultiple: Story = {
   args: {
     dataSource: createMockDataSource(mockCustomers),

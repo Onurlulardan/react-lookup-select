@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   external: ['react', 'react-dom'],
   // CSS dosyasını da kopyala
-  onSuccess: 'cp src/components/LookupSelect.css dist/',
+  onSuccess: 'cp src/styles.css dist/styles.css',
 });

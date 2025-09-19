@@ -17,6 +17,8 @@ interface TriggerProps<T> {
   className?: string;
   style?: React.CSSProperties;
   renderTrigger?: (selected: T | T[] | null) => React.ReactNode;
+  onClear?: () => void;
+  onRemoveTag?: (item: T) => void;
 }
 
 export function Trigger<T>({
@@ -30,6 +32,8 @@ export function Trigger<T>({
   className,
   style,
   renderTrigger,
+  onClear,
+  onRemoveTag,
 }: TriggerProps<T>) {
   const selectedValue =
     mode === 'single' ? selectedItems[0] || null : selectedItems;
@@ -91,7 +95,7 @@ export function Trigger<T>({
                   className="lookup-select__tag-remove"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // TODO: Remove single tag functionality
+                    onRemoveTag?.(item);
                   }}
                   aria-label={`Remove ${mapper.getText(item)}`}
                 >
@@ -108,17 +112,43 @@ export function Trigger<T>({
         )}
       </div>
 
-      <div className="lookup-select__trigger-icon">
-        {icon || (
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-            <path
-              d="M3 4.5L6 7.5L9 4.5"
-              stroke="currentColor"
-              strokeWidth="1"
-              fill="none"
-            />
-          </svg>
+      <div className="lookup-select__trigger-actions">
+        {/* Clear button - sadece seçim varsa göster */}
+        {selectedItems.length > 0 && onClear && (
+          <button
+            type="button"
+            className="lookup-select__clear-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClear();
+            }}
+            aria-label="Clear selection"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path
+                d="M8.25 3.75L3.75 8.25M3.75 3.75L8.25 8.25"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
         )}
+
+        {/* Dropdown icon */}
+        <div className="lookup-select__trigger-icon">
+          {icon || (
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+              <path
+                d="M3 4.5L6 7.5L9 4.5"
+                stroke="currentColor"
+                strokeWidth="1"
+                fill="none"
+              />
+            </svg>
+          )}
+        </div>
       </div>
     </div>
   );

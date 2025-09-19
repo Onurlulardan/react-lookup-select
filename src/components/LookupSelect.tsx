@@ -342,6 +342,8 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
         className={classNames?.trigger}
         style={styles?.trigger}
         renderTrigger={renderTrigger}
+        onClear={clearSelections}
+        onRemoveTag={(item) => toggleRowSelection(item)}
       />
 
       <Modal

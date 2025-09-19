@@ -7,7 +7,6 @@ import {
 
 /**
  * Headless core logic - selection state, query state, mapping and return value generation
- * Project.md Section 3: Internal Architecture implementation
  */
 
 /**

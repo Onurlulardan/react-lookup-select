@@ -4,7 +4,6 @@ import { SelectionManager, QueryManager, mapReturnValue } from './core';
 
 /**
  * State machine: idle → modalOpen → selecting → confirming/cancelled
- * Project.md Section 3: Controlled/Uncontrolled behavior
  */
 
 export type ModalState = 'closed' | 'open';

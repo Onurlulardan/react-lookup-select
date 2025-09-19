@@ -1,41 +1,41 @@
-# @onurlulardan/react-lookup-select
+# onur-react-lookup-select
 
-Modal içinde grid ile tekli/çoklu seçim yapan headless ama tema-takılabilir React bileşeni.
+A headless, customizable React lookup select component with modal and grid support for single/multiple selection.
 
-## Özellikler
+## Features
 
-- **Trigger (ComboBox görünümü)**: tıklanınca modal açılır
-- **Modal içi Grid**: tekli / çoklu satır seçimi (checkbox'lı veya satıra tıkla)
-- **Seçim Mode'ları**: single | multiple
-- **Dönüş Değeri**: id ve text alanları kullanıcı tarafından map edilebilir
-- **Tam Özelleştirme**: tema, ikon, grid kolonları, hücre render'ları
-- **Veri Kaynağı**: data (dizi) veya dataSource (async: sayfalama/sort/search)
-- **Erişilebilirlik**: klavye navigasyonu, ARIA rolleri, focus trap
-- **Performans**: büyük veri için virtualization opsiyonu
+- **Trigger (ComboBox appearance)**: Click to open modal
+- **Grid inside Modal**: Single/multiple row selection (with checkboxes or row clicks)
+- **Selection Modes**: single | multiple
+- **Return Values**: id and text fields are user-mappable
+- **Full Customization**: themes, icons, grid columns, cell renderers
+- **Data Sources**: data (array) or dataSource (async: pagination/sort/search)
+- **Accessibility**: keyboard navigation, ARIA roles, focus trap
+- **Performance**: virtualization option for large datasets
 
-## Kurulum
+## Installation
 
 ```bash
-npm i @onurlulardan/react-lookup-select
+npm i onur-react-lookup-select
 ```
 
 ```tsx
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
-import '@onurlulardan/react-lookup-select/styles.css';
+import { LookupSelect } from 'onur-react-lookup-select';
+import 'onur-react-lookup-select/styles.css';
 ```
 
-## Örnek Kullanımlar
+## Example Usage
 
-### Tekli Seçim – text = name + ' ' + surname
+### Single Selection – text = name + ' ' + surname
 
 ```tsx
 <LookupSelect
   mode="single"
   data={users}
   columns={[
-    { key: 'name', title: 'Ad' },
-    { key: 'surname', title: 'Soyad' },
-    { key: 'email', title: 'E-posta' },
+    { key: 'name', title: 'Name' },
+    { key: 'surname', title: 'Surname' },
+    { key: 'email', title: 'Email' },
   ]}
   mapper={{
     getId: (u) => u.userId,
@@ -46,7 +46,7 @@ import '@onurlulardan/react-lookup-select/styles.css';
 />
 ```
 
-### Çoklu Seçim – Custom dönüş
+### Multiple Selection – Custom return
 
 ```tsx
 <LookupSelect
@@ -54,8 +54,8 @@ import '@onurlulardan/react-lookup-select/styles.css';
   data={products}
   columns={[
     { key: 'sku', title: 'SKU' },
-    { key: 'title', title: 'Ürün' },
-    { key: 'price', title: 'Fiyat' },
+    { key: 'title', title: 'Product' },
+    { key: 'price', title: 'Price' },
   ]}
   mapper={{ getId: (p) => p.id, getText: (p) => p.title }}
   returnShape="custom"
@@ -64,7 +64,7 @@ import '@onurlulardan/react-lookup-select/styles.css';
 />
 ```
 
-### Server-side veri + arama/sayfalama
+### Server-side data + search/pagination
 
 ```tsx
 const dataSource = async (q: QueryState) => {
@@ -80,61 +80,61 @@ const dataSource = async (q: QueryState) => {
   dataSource={dataSource}
   pageSize={50}
   columns={[
-    { key: 'name', title: 'Ad', sortable: true },
-    { key: 'surname', title: 'Soyad', sortable: true },
-    { key: 'department', title: 'Birim' },
+    { key: 'name', title: 'Name', sortable: true },
+    { key: 'surname', title: 'Surname', sortable: true },
+    { key: 'department', title: 'Department' },
   ]}
   mapper={{ getId: (u) => u.id, getText: (u) => `${u.name} ${u.surname}` }}
   onQueryChange={(q) => console.log('query changed', q)}
 />;
 ```
 
-## Temalandırma ve Özelleştirme
+## Theming and Customization
 
-### Hazır Temalar
+### Pre-built Themes
 
 ```tsx
 {
-  /* Default tema */
+  /* Default theme */
 }
 <LookupSelect variant="default" {...props} />;
 
 {
-  /* Dark tema */
+  /* Dark theme */
 }
 <LookupSelect variant="dark" {...props} />;
 
 {
-  /* Minimal tema */
+  /* Minimal theme */
 }
 <LookupSelect variant="minimal" {...props} />;
 
 {
-  /* Compact tema */
+  /* Compact theme */
 }
 <LookupSelect variant="compact" {...props} />;
 ```
 
-### Boyut Seçenekleri
+### Size Options
 
 ```tsx
 {
-  /* Küçük boyut */
+  /* Small size */
 }
 <LookupSelect size="small" {...props} />;
 
 {
-  /* Orta boyut (varsayılan) */
+  /* Medium size (default) */
 }
 <LookupSelect size="medium" {...props} />;
 
 {
-  /* Büyük boyut */
+  /* Large size */
 }
 <LookupSelect size="large" {...props} />;
 ```
 
-### CSS Değişkenleri ile Özelleştirme
+### Customization with CSS Variables
 
 ```tsx
 <LookupSelect
@@ -149,7 +149,7 @@ const dataSource = async (q: QueryState) => {
 />
 ```
 
-### CSS Sınıfları ile Özelleştirme
+### Customization with CSS Classes
 
 ```tsx
 <LookupSelect
@@ -176,7 +176,7 @@ const dataSource = async (q: QueryState) => {
 }
 ```
 
-### Inline Stiller
+### Inline Styles
 
 ```tsx
 <LookupSelect
@@ -189,28 +189,28 @@ const dataSource = async (q: QueryState) => {
 />
 ```
 
-## Virtualization - Büyük Veri Performansı
+## Virtualization - Large Data Performance
 
-### Otomatik Virtualization
+### Auto Virtualization
 
 ```tsx
 <LookupSelect
-  data={largeDataArray} // 1000+ kayıt
+  data={largeDataArray} // 1000+ records
   virtualization={true} // Auto-enable when data > 100 items
   {...props}
 />
 ```
 
-### Manuel Virtualization Konfigürasyonu
+### Manual Virtualization Configuration
 
 ```tsx
 <LookupSelect
   data={tenThousandItems}
   virtualization={true}
-  virtualRowHeight={48} // Sabit satır yüksekliği
-  virtualContainerHeight={500} // Scroll container yüksekliği
-  virtualOverscan={10} // Smooth scroll için buffer
-  virtualThreshold={100} // Bu sayıdan fazlasında aktif
+  virtualRowHeight={48} // Fixed row height
+  virtualContainerHeight={500} // Scroll container height
+  virtualOverscan={10} // Buffer for smooth scrolling
+  virtualThreshold={100} // Enable when data exceeds this
   {...props}
 />
 ```
@@ -221,32 +221,32 @@ const dataSource = async (q: QueryState) => {
 <LookupSelect
   dataSource={serverDataSource}
   virtualization={true}
-  pageSize={100} // Server'dan 500 kayıt (5x buffer)
+  pageSize={100} // Fetch 500 records from server (5x buffer)
   virtualContainerHeight={400}
   virtualRowHeight={40}
   {...props}
 />
 ```
 
-### Performance Karşılaştırması
+### Performance Comparison
 
-| Veri Boyutu | Virtualization | DOM Elementleri | Render Süresi | Memory |
-| ----------- | -------------- | --------------- | ------------- | ------ |
-| 10,000 item | ❌ Kapalı      | 10,000 satır    | ~2000ms       | ~200MB |
-| 10,000 item | ✅ Açık        | ~20 satır       | ~50ms         | ~15MB  |
+| Data Size   | Virtualization | DOM Elements | Render Time | Memory |
+| ----------- | -------------- | ------------ | ----------- | ------ |
+| 10,000 item | ❌ Disabled    | 10,000 rows  | ~2000ms     | ~200MB |
+| 10,000 item | ✅ Enabled     | ~20 rows     | ~50ms       | ~15MB  |
 
-### Kullanım Önerileri
+### Usage Recommendations
 
-- **100+ kayıt:** Otomatik virtualization
-- **1,000+ kayıt:** Client-side virtualization
-- **10,000+ kayıt:** Hybrid mode (server + client)
-- **100,000+ kayıt:** Pure server pagination
+- **100+ records:** Auto virtualization
+- **1,000+ records:** Client-side virtualization
+- **10,000+ records:** Hybrid mode (server + client)
+- **100,000+ records:** Pure server pagination
 
-### Tüm CSS Özelleştirme Değişkenleri
+### All CSS Customization Variables
 
 ```css
 :root {
-  /* Renkler */
+  /* Colors */
   --lookup-select-color-primary: #0066cc;
   --lookup-select-color-primary-hover: #0052a3;
   --lookup-select-color-bg: #ffffff;
@@ -258,21 +258,17 @@ const dataSource = async (q: QueryState) => {
   --lookup-select-spacing: 8px;
   --lookup-select-font-size: 14px;
 
-  /* Component özel boyutlar */
+  /* Component specific sizes */
   --lookup-select-trigger-height: 36px;
   --lookup-select-modal-width: 600px;
   --lookup-select-grid-row-height: 40px;
 
-  /* Gölgeler */
+  /* Shadows */
   --lookup-select-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   --lookup-select-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 ```
 
-## Geliştirme Aşamasında
-
-Bu paket şu anda geliştirme aşamasındadır. Tam implementasyon için bekleyiniz!
-
-## Lisans
+## License
 
 MIT

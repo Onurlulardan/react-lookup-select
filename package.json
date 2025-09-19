@@ -1,0 +1,65 @@
+{
+  "name": "@onurlulardan/react-lookup-select",
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "dist/styles.css"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --dts --format cjs,esm --sourcemap",
+    "dev": "tsup src/index.ts --dts --format cjs,esm --sourcemap --watch",
+    "lint": "eslint .",
+    "test": "vitest",
+    "prepare": "husky install"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onurlulardanlulardan/react-lookup-select.git"
+  },
+  "keywords": [
+    "react",
+    "select",
+    "lookup",
+    "modal",
+    "grid",
+    "combobox",
+    "picker",
+    "headless",
+    "a11y"
+  ],
+  "description": "A headless, customizable React lookup select component with modal and grid support",
+  "devDependencies": {
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.35.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

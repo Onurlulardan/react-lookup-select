@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { LookupSelectProps, QueryState } from './types';
 import { SelectionManager, QueryManager, mapReturnValue } from './core';
 
@@ -29,6 +29,7 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
     onSelectionChange,
     onConfirm,
     onCancel,
+    data,
   } = props;
 
   // Modal state management (controlled/uncontrolled)
@@ -57,6 +58,51 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
 
   // Current selections state
   const [currentSelections, setCurrentSelections] = useState<T[]>([]);
+
+  // Helper function to resolve value objects to actual data rows
+  const resolveValueToRows = useCallback((valueToResolve: any): T[] => {
+    if (!valueToResolve || !data) return [];
+    
+    const values = Array.isArray(valueToResolve) ? valueToResolve : [valueToResolve];
+    const resolvedRows: T[] = [];
+    
+    for (const val of values) {
+      // If it's already a full row object, use it directly
+      if (typeof val === 'object' && val !== null && mapper.getId(val as T) !== undefined) {
+        resolvedRows.push(val as T);
+      } 
+      // If it's an id-text object or just an ID, find the matching row in data
+      else {
+        const searchId = typeof val === 'object' && val !== null && 'id' in val ? val.id : val;
+        const matchingRow = data.find(row => mapper.getId(row) === searchId);
+        if (matchingRow) {
+          resolvedRows.push(matchingRow);
+        }
+      }
+    }
+    
+    return resolvedRows;
+  }, [data, mapper]);
+
+  // Initialize default/controlled values when data is available
+  useEffect(() => {
+    const initialValue = value !== undefined ? value : defaultValue;
+    if (!initialValue || !data) return;
+
+    const resolvedSelections = resolveValueToRows(initialValue);
+    
+    if (resolvedSelections.length > 0) {
+      // Clear previous selections
+      selectionManager.clearSelection();
+      
+      // Add new selections
+      for (const row of resolvedSelections) {
+        selectionManager.toggleRow(row);
+      }
+      
+      setCurrentSelections(resolvedSelections);
+    }
+  }, [value, defaultValue, data, resolveValueToRows, selectionManager]);
 
   // Toggle row selection
   const toggleRowSelection = useCallback(

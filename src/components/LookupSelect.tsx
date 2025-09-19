@@ -4,6 +4,7 @@ import { useLookupSelectState } from '../internal/state';
 import { Trigger } from './Trigger';
 import { Modal, SearchInput, ModalFooter } from './Modal';
 import { Grid } from './Grid';
+import { Pagination } from './Pagination';
 
 /**
  * LookupSelect - Headless React lookup select component with modal and grid
@@ -58,15 +59,18 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>();
 
+  // Server-side data state
+  const [serverData, setServerData] = React.useState<T[]>([]);
+  const [totalCount, setTotalCount] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
+
   const handleSearchChange = React.useCallback(
     (value: string) => {
       setSearchValue(value);
-      updateQuery({ search: value });
+      updateQuery({ search: value, page: 1 }); // Reset to page 1 on search
     },
     [updateQuery]
-  );
-
-  // Filtered data - client-side filtering if data provided
+  ); // Filtered data - client-side filtering if data provided
   const filteredData = React.useMemo(() => {
     if (!searchValue || dataSource) {
       return data;
@@ -84,28 +88,65 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     });
   }, [data, searchValue, columns, dataSource]);
 
-  // TODO: Server-side data loading will be implemented in Faz 6
+  // Data source - client vs server-side
+  const currentData = dataSource ? serverData : filteredData;
+
+  // Server-side data loading - Faz 6 implementasyonu
+  const loadServerData = React.useCallback(async () => {
+    if (!dataSource) return;
+
+    setLoading(true);
+    setError(undefined);
+
+    try {
+      const query = getCurrentQuery();
+      const result = await dataSource({
+        ...query,
+        search: searchValue,
+        page: currentPage,
+        pageSize: pageSize || 20,
+      });
+
+      setServerData(result.rows);
+      setTotalCount(result.total);
+      setLoading(false);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Veri yüklenirken hata oluştu'
+      );
+      setLoading(false);
+    }
+  }, [dataSource, getCurrentQuery, searchValue, currentPage, pageSize]);
+
+  // Load data when modal opens or query changes
   React.useEffect(() => {
     if (dataSource && modalOpen) {
-      setLoading(true);
-      const query = getCurrentQuery();
-
-      dataSource({ ...query, search: searchValue })
-        .then(() => {
-          // TODO: Handle server response in Faz 6
-          setLoading(false);
-        })
-        .catch((err) => {
-          setError(err.message);
-          setLoading(false);
-        });
+      loadServerData();
     }
-  }, [dataSource, modalOpen, searchValue, getCurrentQuery]);
+  }, [dataSource, modalOpen, loadServerData]);
+
+  // Page change handler
+  const handlePageChange = React.useCallback(
+    (newPage: number) => {
+      setCurrentPage(newPage);
+      updateQuery({ page: newPage });
+    },
+    [updateQuery]
+  );
+
+  // Sort change handler
+  const handleSortChange = React.useCallback(
+    (sortBy: string, sortDir: 'asc' | 'desc') => {
+      updateQuery({ sortBy, sortDir, page: 1 }); // Reset to page 1 on sort
+      setCurrentPage(1);
+    },
+    [updateQuery]
+  );
 
   // Grid component with current data
   const renderGrid = () => (
     <Grid
-      data={filteredData}
+      data={currentData}
       columns={columns}
       mode={mode}
       mapper={mapper}
@@ -118,6 +159,15 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
       emptyText={texts.emptyText}
       className={classNames?.grid}
       style={styles?.grid}
+      currentSort={
+        dataSource
+          ? {
+              sortBy: getCurrentQuery().sortBy || '',
+              sortDir: getCurrentQuery().sortDir || 'asc',
+            }
+          : undefined
+      }
+      onSort={dataSource ? handleSortChange : undefined}
     />
   );
 
@@ -154,7 +204,19 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
         />
 
         {/* Grid Body - Faz 5 implementasyonu tamamlandı */}
-        <div className="lookup-select__modal-content">{renderGrid()}</div>
+        <div className="lookup-select__modal-content">
+          {renderGrid()}
+
+          {/* Pagination - only for server-side data */}
+          {dataSource && (
+            <Pagination
+              currentPage={currentPage}
+              totalCount={totalCount}
+              pageSize={pageSize || 20}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </div>
 
         {/* Footer */}
         <ModalFooter

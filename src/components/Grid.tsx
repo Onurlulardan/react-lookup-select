@@ -16,6 +16,8 @@ interface GridProps<T> {
   onRowClick?: (row: T) => void;
   isRowSelected: (row: T) => boolean;
   selectableRow?: (row: T) => boolean;
+  onSort?: (sortBy: string, sortDir: 'asc' | 'desc') => void;
+  currentSort?: { sortBy?: string; sortDir?: 'asc' | 'desc' };
   loading?: boolean;
   error?: string;
   emptyText?: string;
@@ -33,18 +35,43 @@ export function Grid<T>({
   onRowClick,
   isRowSelected,
   selectableRow,
+  onSort,
+  currentSort,
   loading = false,
   error,
   emptyText = 'Kayıt bulunamadı',
   className,
   style,
 }: GridProps<T>) {
+  const handleSort = (columnKey: string) => {
+    if (!onSort) return;
+
+    const currentSortBy = currentSort?.sortBy;
+    const currentSortDir = currentSort?.sortDir;
+
+    let newSortDir: 'asc' | 'desc' = 'asc';
+
+    if (currentSortBy === columnKey) {
+      // Same column - toggle direction
+      newSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+    }
+
+    onSort(columnKey, newSortDir);
+  };
+
+  const getSortIcon = (columnKey: string) => {
+    if (currentSort?.sortBy !== columnKey) {
+      return '↕'; // Both directions
+    }
+
+    return currentSort.sortDir === 'asc' ? '↑' : '↓';
+  };
+
   // Loading state
   if (loading) {
     return (
       <div className="lookup-select__grid-state">
         <div className="lookup-select__loading">
-          <div className="lookup-select__loading-spinner"></div>
           <p>Yükleniyor...</p>
         </div>
       </div>
@@ -184,9 +211,9 @@ export function Grid<T>({
                       type="button"
                       className="lookup-select__sort-button"
                       aria-label={`${column.title} kolonuna göre sırala`}
-                      // TODO: Implement sorting in Faz 6
+                      onClick={() => handleSort(String(column.key))}
                     >
-                      ↕
+                      {getSortIcon(String(column.key))}
                     </button>
                   )}
                 </div>

@@ -1,6 +1,6 @@
 {
   "name": "react-lookup-select",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
@@ -39,6 +39,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Onurlulardan/react-lookup-select.git"
+  },
+  "homepage": "https://github.com/Onurlulardan/react-lookup-select#readme",
+  "bugs": {
+    "url": "https://github.com/Onurlulardan/react-lookup-select/issues"
   },
   "keywords": [
     "react",

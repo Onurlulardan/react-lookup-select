@@ -73,7 +73,7 @@
   --lookup-select-grid-cell-padding-y: var(--lookup-select-spacing);
   
   /* Pagination */
-  --lookup-select-pagination-button-size: 32px;
+  --lookup-select-pagination-button-size: 28px;
   --lookup-select-pagination-gap: var(--lookup-select-spacing-sm);
   
   /* Search */
@@ -374,7 +374,7 @@
   border-top: 1px solid var(--lookup-select-color-border);
   background: var(--lookup-select-color-bg-secondary);
   flex-shrink: 0;
-  margin-top: var(--lookup-select-spacing-lg);
+  margin-top: var(--lookup-select-spacing);
 }
 
 .lookup-select__selected-count {
@@ -422,6 +422,100 @@
 .lookup-select__button--primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* === PAGINATION === */
+.lookup-select__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lookup-select-spacing-lg);
+  padding: var(--lookup-select-spacing-lg) 0;
+}
+
+.lookup-select__pagination-info {
+  font-size: var(--lookup-select-font-size-sm);
+  color: var(--lookup-select-color-text-secondary);
+  font-weight: var(--lookup-select-font-weight);
+  white-space: nowrap;
+}
+
+.lookup-select__pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.lookup-select__pagination-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--lookup-select-pagination-button-size);
+  height: var(--lookup-select-pagination-button-size);
+  background: var(--lookup-select-color-bg);
+  border: 1px solid var(--lookup-select-color-border);
+  border-radius: var(--lookup-select-border-radius);
+  font-size: var(--lookup-select-font-size-sm);
+  font-weight: var(--lookup-select-font-weight-medium);
+  color: var(--lookup-select-color-text);
+  cursor: pointer;
+  transition: all var(--lookup-select-transition-duration) var(--lookup-select-transition-timing);
+  user-select: none;
+}
+
+.lookup-select__pagination-button:hover:not(:disabled) {
+  background: var(--lookup-select-color-hover);
+  border-color: var(--lookup-select-color-primary);
+  color: var(--lookup-select-color-primary);
+}
+
+.lookup-select__pagination-button--active {
+  background: var(--lookup-select-color-primary);
+  border-color: var(--lookup-select-color-primary);
+  color: white;
+}
+
+.lookup-select__pagination-button--active:hover {
+  background: #0052a3;
+  border-color: #0052a3;
+}
+
+.lookup-select__pagination-button:disabled {
+  background: var(--lookup-select-color-bg-secondary);
+  border-color: var(--lookup-select-color-border);
+  color: var(--lookup-select-color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.lookup-select__pagination-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--lookup-select-pagination-button-size);
+  height: var(--lookup-select-pagination-button-size);
+  font-size: var(--lookup-select-font-size-sm);
+  color: var(--lookup-select-color-text-secondary);
+  user-select: none;
+}
+
+/* Responsive pagination - mobile */
+@media (max-width: 480px) {
+  .lookup-select__pagination {
+    flex-direction: column;
+    gap: var(--lookup-select-spacing);
+    align-items: stretch;
+  }
+  
+  .lookup-select__pagination-info {
+    text-align: center;
+    order: 2;
+  }
+  
+  .lookup-select__pagination-controls {
+    justify-content: center;
+    order: 1;
+  }
 }
 
 /* === GRID === */

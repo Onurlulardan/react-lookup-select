@@ -1,5 +1,9 @@
 # react-lookup-select
 
+[![NPM Version](https://img.shields.io/npm/v/react-lookup-select.svg)](https://www.npmjs.com/package/react-lookup-select)
+[![NPM Downloads](https://img.shields.io/npm/dm/react-lookup-select.svg)](https://www.npmjs.com/package/react-lookup-select)
+[![GitHub](https://img.shields.io/github/license/Onurlulardan/react-lookup-select.svg)](https://github.com/Onurlulardan/react-lookup-select)
+
 A headless, customizable React lookup select component with modal and grid support for single/multiple selection.
 
 ## Features

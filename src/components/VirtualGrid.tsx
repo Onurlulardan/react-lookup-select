@@ -54,6 +54,27 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null);
   const [scrollTop, setScrollTop] = React.useState(0);
+  const [actualContainerHeight, setActualContainerHeight] = React.useState(
+    virtualization.containerHeight
+  );
+
+  // Update actual container height when container is available
+  React.useEffect(() => {
+    if (containerRef.current) {
+      const updateHeight = () => {
+        if (containerRef.current) {
+          setActualContainerHeight(containerRef.current.clientHeight);
+        }
+      };
+
+      updateHeight();
+
+      const resizeObserver = new ResizeObserver(updateHeight);
+      resizeObserver.observe(containerRef.current);
+
+      return () => resizeObserver.disconnect();
+    }
+  }, []);
 
   // Handle header checkbox indeterminate state
   React.useEffect(() => {
@@ -66,12 +87,12 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
 
   // Calculate visible range
   const itemCount = data.length;
-  const { rowHeight, containerHeight, overscan } = virtualization;
+  const { rowHeight, overscan } = virtualization;
 
   const startIndex = Math.max(0, Math.floor(scrollTop / rowHeight) - overscan);
   const endIndex = Math.min(
     itemCount - 1,
-    Math.floor((scrollTop + containerHeight) / rowHeight) + overscan
+    Math.floor((scrollTop + actualContainerHeight) / rowHeight) + overscan
   );
 
   const visibleItems: VirtualItem<T>[] = React.useMemo(() => {
@@ -232,7 +253,7 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
         ref={containerRef}
         className="lookup-select__virtual-container"
         style={{
-          height: containerHeight,
+          flex: 1,
           overflow: 'auto',
           position: 'relative',
         }}

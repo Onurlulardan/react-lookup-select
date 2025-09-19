@@ -31,8 +31,7 @@
     "test": "vitest",
     "prepare": "husky install",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "deploy-storybook": "storybook build && gh-pages -d storybook-static"
+    "build-storybook": "storybook build"
   },
   "publishConfig": {
     "access": "public"
@@ -69,7 +68,6 @@
     "@typescript-eslint/parser": "^8.44.0",
     "eslint": "^9.35.0",
     "eslint-plugin-storybook": "^9.1.7",
-    "gh-pages": "^6.3.0",
     "husky": "^9.1.7",
     "jsdom": "^27.0.0",
     "prettier": "^3.6.2",

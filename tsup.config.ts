@@ -8,4 +8,6 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   external: ['react', 'react-dom'],
+  // CSS dosyasını da kopyala
+  onSuccess: 'cp src/components/LookupSelect.css dist/',
 });

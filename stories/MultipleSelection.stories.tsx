@@ -108,7 +108,7 @@ Multiple selection stories showcasing checkbox-based multi-selection capabilitie
 ## Basic Multiple Selection
 
 \`\`\`tsx
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
+import { LookupSelect } from 'react-lookup-select';
 
 const employees = [
   { empId: 1, name: 'John', surname: 'Doe', department: 'Engineering' },

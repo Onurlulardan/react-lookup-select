@@ -112,7 +112,7 @@ Server-side data source stories showcasing async data loading with search, pagin
 ## Basic Server-side Usage
 
 \`\`\`tsx
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
+import { LookupSelect } from 'react-lookup-select';
 
 const dataSource = {
   fetchData: async (query, page, pageSize) => {

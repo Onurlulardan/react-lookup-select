@@ -174,7 +174,7 @@ This page showcases various custom rendering capabilities of the LookupSelect co
 ## Basic Usage
 
 \`\`\`tsx
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
+import { LookupSelect } from 'react-lookup-select';
 
 <LookupSelect
   data={products}

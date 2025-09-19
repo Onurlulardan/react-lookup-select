@@ -1,4 +1,4 @@
-// Main export file for @onurlulardan/react-lookup-select
+// Main export file for react-lookup-select
 export { LookupSelect } from './components/LookupSelect';
 
 // Public API Types - according to project.md Section 2

@@ -78,7 +78,7 @@ A headless, customizable React lookup select component with modal and grid suppo
 ## Basic Usage
 
 \`\`\`tsx
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
+import { LookupSelect } from 'react-lookup-select';
 
 const users = [
   { userId: 1, name: 'John', surname: 'Doe', email: 'john@example.com' },
@@ -142,7 +142,7 @@ type Story = StoryObj<typeof meta>;
 //
 // Example usage:
 //
-// import { LookupSelect } from '@onurlulardan/react-lookup-select';
+// import { LookupSelect } from 'react-lookup-select';
 //
 // const users = [
 //   { userId: 1, name: 'John', surname: 'Doe', email: 'john@example.com' },

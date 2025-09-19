@@ -108,7 +108,7 @@ Virtualization examples demonstrating performance with large datasets (1K-25K re
 ## Basic Virtualization Usage
 
 \`\`\`tsx
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
+import { LookupSelect } from 'react-lookup-select';
 
 // Generate large dataset
 const generateLargeDataset = (size) => {

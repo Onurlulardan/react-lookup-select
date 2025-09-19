@@ -1,5 +1,5 @@
 import React from 'react';
-import { LookupSelect } from '@onurlulardan/react-lookup-select';
+import { LookupSelect } from 'react-lookup-select';
 
 // Example data
 const users = [

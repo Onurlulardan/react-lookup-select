@@ -79,6 +79,22 @@ export type ValueMapper<T> = {
 };
 
 /**
+ * Virtualization konfigürasyonu
+ */
+export type VirtualizationConfig = {
+  /** Virtualization aktif mi? */
+  enabled: boolean;
+  /** Sabit satır yüksekliği (px) */
+  rowHeight: number;
+  /** Görünür alan dışında render edilecek ek satır sayısı */
+  overscan: number;
+  /** Container yüksekliği (px) */
+  containerHeight: number;
+  /** Virtualization threshold - bu sayıdan fazla item'da aktif olur */
+  threshold: number;
+};
+
+/**
  * Dönüş değeri şekli
  */
 export type ReturnShape = 'id-text' | 'row' | 'custom';
@@ -240,8 +256,16 @@ export type LookupSelectProps<T> = {
   // === Grid Davranışı ===
   /** Row bazlı seçim kısıtı fonksiyonu */
   selectableRow?: (row: T) => boolean;
-  /** Büyük data için virtualization */
+  /** Büyük data için virtualization aktif mi? */
   virtualization?: boolean;
+  /** Virtual grid için sabit satır yüksekliği (px) - default: 40 */
+  virtualRowHeight?: number;
+  /** Görünür alan dışında render edilecek ek satır sayısı - default: 5 */
+  virtualOverscan?: number;
+  /** Virtual container yüksekliği (px) - default: 400 */
+  virtualContainerHeight?: number;
+  /** Virtualization threshold - bu sayıdan fazla item'da aktif olur - default: 100 */
+  virtualThreshold?: number;
   /** Sayfa boyutu - default 20 */
   pageSize?: number;
 

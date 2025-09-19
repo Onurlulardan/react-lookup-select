@@ -4,6 +4,7 @@ import { useLookupSelectState } from '../internal/state';
 import { Trigger } from './Trigger';
 import { Modal, SearchInput, ModalFooter } from './Modal';
 import { Grid } from './Grid';
+import { VirtualGrid } from './VirtualGrid';
 import { Pagination } from './Pagination';
 
 /**
@@ -28,6 +29,11 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     i18n,
     pageSize = 20,
     selectableRow,
+    virtualization = false,
+    virtualRowHeight = 40,
+    virtualOverscan = 5,
+    virtualContainerHeight = 400,
+    virtualThreshold = 100,
   } = props;
 
   // Headless state management
@@ -56,6 +62,24 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     selectedCount: (n: number) => `${n} seçildi`,
     ...i18n,
   };
+
+  // Hybrid mode optimization: Increase page size for virtualization
+  const optimizedPageSize = React.useMemo(() => {
+    if (dataSource && virtualization) {
+      // For hybrid mode, fetch larger chunks (5-10x virtual container capacity)
+      const containerCapacity = Math.ceil(
+        virtualContainerHeight / virtualRowHeight
+      );
+      return Math.max(pageSize, containerCapacity * 5); // 5x buffer for smooth scrolling
+    }
+    return pageSize;
+  }, [
+    dataSource,
+    virtualization,
+    virtualContainerHeight,
+    virtualRowHeight,
+    pageSize,
+  ]);
 
   // Search state
   const [searchValue, setSearchValue] = React.useState('');
@@ -107,7 +131,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
         ...query,
         search: searchValue,
         page: currentPage,
-        pageSize: pageSize || 20,
+        pageSize: optimizedPageSize,
       });
 
       setServerData(result.rows);
@@ -119,7 +143,13 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
       );
       setLoading(false);
     }
-  }, [dataSource, getCurrentQuery, searchValue, currentPage, pageSize]);
+  }, [
+    dataSource,
+    getCurrentQuery,
+    searchValue,
+    currentPage,
+    optimizedPageSize,
+  ]);
 
   // Load data when modal opens or query changes
   React.useEffect(() => {
@@ -146,33 +176,85 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     [updateQuery]
   );
 
-  // Grid component with current data
-  const renderGrid = () => (
-    <Grid
-      data={currentData}
-      columns={columns}
-      mode={mode}
-      mapper={mapper}
-      selectedRows={currentSelections}
-      onRowToggle={toggleRowSelection}
-      isRowSelected={isRowSelected}
-      selectableRow={selectableRow}
-      loading={loading}
-      error={error}
-      emptyText={texts.emptyText}
-      className={classNames?.grid}
-      style={styles?.grid}
-      currentSort={
-        dataSource
-          ? {
-              sortBy: getCurrentQuery().sortBy || '',
-              sortDir: getCurrentQuery().sortDir || 'asc',
-            }
-          : undefined
-      }
-      onSort={dataSource ? handleSortChange : undefined}
-    />
+  // Virtualization logic
+  const shouldUseVirtualization = React.useMemo(() => {
+    if (!virtualization) return false;
+    // Auto-enable virtualization if data exceeds threshold
+    return currentData.length >= virtualThreshold;
+  }, [virtualization, currentData.length, virtualThreshold]);
+
+  const virtualizationConfig = React.useMemo(
+    () => ({
+      enabled: shouldUseVirtualization,
+      rowHeight: virtualRowHeight,
+      overscan: virtualOverscan,
+      containerHeight: virtualContainerHeight,
+      threshold: virtualThreshold,
+    }),
+    [
+      shouldUseVirtualization,
+      virtualRowHeight,
+      virtualOverscan,
+      virtualContainerHeight,
+      virtualThreshold,
+    ]
   );
+
+  // Grid component with current data - Performance optimized with useCallback
+  const renderGrid = React.useCallback(() => {
+    const commonGridProps = {
+      data: currentData,
+      columns,
+      mode,
+      mapper,
+      selectedRows: currentSelections,
+      onRowToggle: toggleRowSelection,
+      isRowSelected,
+      selectableRow,
+      loading,
+      error,
+      emptyText: texts.emptyText,
+      className: classNames?.grid,
+      style: styles?.grid,
+      currentSort: dataSource
+        ? {
+            sortBy: getCurrentQuery().sortBy || '',
+            sortDir: getCurrentQuery().sortDir || 'asc',
+          }
+        : undefined,
+      onSort: dataSource ? handleSortChange : undefined,
+    };
+
+    if (shouldUseVirtualization) {
+      return (
+        <VirtualGrid
+          {...commonGridProps}
+          virtualization={virtualizationConfig}
+        />
+      );
+    }
+
+    return <Grid {...commonGridProps} />;
+  }, [
+    currentData,
+    columns,
+    mode,
+    mapper,
+    currentSelections,
+    toggleRowSelection,
+    isRowSelected,
+    selectableRow,
+    loading,
+    error,
+    texts.emptyText,
+    classNames?.grid,
+    styles?.grid,
+    dataSource,
+    getCurrentQuery,
+    handleSortChange,
+    shouldUseVirtualization,
+    virtualizationConfig,
+  ]);
 
   // Generate theme class names
   const getThemeClasses = () => {
@@ -254,7 +336,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
             <Pagination
               currentPage={currentPage}
               totalCount={totalCount}
-              pageSize={pageSize || 20}
+              pageSize={optimizedPageSize}
               onPageChange={handlePageChange}
             />
           )}

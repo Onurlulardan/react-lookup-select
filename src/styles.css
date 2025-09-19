@@ -622,3 +622,85 @@
   --lookup-select-spacing: 12px;
   --lookup-select-grid-row-height: 48px;
 }
+
+/* === VIRTUAL GRID === */
+.lookup-select__virtual-grid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.lookup-select__virtual-container {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--lookup-select-color-border) transparent;
+}
+
+.lookup-select__virtual-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.lookup-select__virtual-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lookup-select__virtual-container::-webkit-scrollbar-thumb {
+  background: var(--lookup-select-color-border);
+  border-radius: var(--lookup-select-border-radius);
+}
+
+.lookup-select__virtual-container::-webkit-scrollbar-thumb:hover {
+  background: var(--lookup-select-color-border-hover);
+}
+
+.lookup-select__virtual-content {
+  position: relative;
+}
+
+.lookup-select__virtual-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  cursor: pointer;
+  transition: background-color var(--lookup-select-transition-duration) var(--lookup-select-transition-timing);
+}
+
+.lookup-select__virtual-row:hover {
+  background: var(--lookup-select-color-bg-hover);
+}
+
+.lookup-select__virtual-row--selected {
+  background: rgba(0, 102, 204, 0.1);
+  border-left: 3px solid var(--lookup-select-color-primary);
+}
+
+.lookup-select__virtual-row--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lookup-select__virtual-row--disabled:hover {
+  background: transparent;
+}
+
+.lookup-select__virtual-row .lookup-select__table {
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+}
+
+.lookup-select__virtual-row .lookup-select__cell {
+  padding: var(--lookup-select-grid-cell-padding-y) var(--lookup-select-grid-cell-padding-x);
+  border-bottom: 1px solid var(--lookup-select-color-border);
+  vertical-align: middle;
+  font-size: var(--lookup-select-font-size);
+  line-height: var(--lookup-select-line-height);
+}
+
+.lookup-select__virtual-row .lookup-select__cell--checkbox {
+  width: 40px;
+  text-align: center;
+  padding: var(--lookup-select-grid-cell-padding-y) var(--lookup-select-spacing);
+}

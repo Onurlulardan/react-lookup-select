@@ -89,6 +89,133 @@ const dataSource = async (q: QueryState) => {
 />;
 ```
 
+## Temalandırma ve Özelleştirme
+
+### Hazır Temalar
+
+```tsx
+{
+  /* Default tema */
+}
+<LookupSelect variant="default" {...props} />;
+
+{
+  /* Dark tema */
+}
+<LookupSelect variant="dark" {...props} />;
+
+{
+  /* Minimal tema */
+}
+<LookupSelect variant="minimal" {...props} />;
+
+{
+  /* Compact tema */
+}
+<LookupSelect variant="compact" {...props} />;
+```
+
+### Boyut Seçenekleri
+
+```tsx
+{
+  /* Küçük boyut */
+}
+<LookupSelect size="small" {...props} />;
+
+{
+  /* Orta boyut (varsayılan) */
+}
+<LookupSelect size="medium" {...props} />;
+
+{
+  /* Büyük boyut */
+}
+<LookupSelect size="large" {...props} />;
+```
+
+### CSS Değişkenleri ile Özelleştirme
+
+```tsx
+<LookupSelect
+  theme={{
+    colorPrimary: '#8b5cf6',
+    colorBg: '#faf5ff',
+    colorText: '#4c1d95',
+    borderRadius: 12,
+    spacing: 10,
+  }}
+  {...props}
+/>
+```
+
+### CSS Sınıfları ile Özelleştirme
+
+```tsx
+<LookupSelect
+  classNames={{
+    root: 'my-custom-lookup',
+    trigger: 'my-custom-trigger',
+    modal: 'my-custom-modal',
+    grid: 'my-custom-grid',
+  }}
+  {...props}
+/>
+```
+
+```css
+.my-custom-lookup {
+  --lookup-select-color-primary: #10b981;
+  --lookup-select-border-radius: 8px;
+  --lookup-select-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.my-custom-trigger {
+  border: 2px solid #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+```
+
+### Inline Stiller
+
+```tsx
+<LookupSelect
+  styles={{
+    root: { border: '2px solid #f59e0b', borderRadius: '8px' },
+    trigger: { background: '#fef3c7', color: '#92400e' },
+    modal: { boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' },
+  }}
+  {...props}
+/>
+```
+
+### Tüm CSS Özelleştirme Değişkenleri
+
+```css
+:root {
+  /* Renkler */
+  --lookup-select-color-primary: #0066cc;
+  --lookup-select-color-primary-hover: #0052a3;
+  --lookup-select-color-bg: #ffffff;
+  --lookup-select-color-text: #333333;
+  --lookup-select-color-border: #d1d5db;
+
+  /* Layout */
+  --lookup-select-border-radius: 6px;
+  --lookup-select-spacing: 8px;
+  --lookup-select-font-size: 14px;
+
+  /* Component özel boyutlar */
+  --lookup-select-trigger-height: 36px;
+  --lookup-select-modal-width: 600px;
+  --lookup-select-grid-row-height: 40px;
+
+  /* Gölgeler */
+  --lookup-select-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  --lookup-select-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+```
+
 ## Geliştirme Aşamasında
 
 Bu paket şu anda geliştirme aşamasındadır. Tam implementasyon için bekleyiniz!

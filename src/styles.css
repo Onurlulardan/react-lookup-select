@@ -1,113 +1,233 @@
 /* Basic styles for react-lookup-select */
-/* Project.md Bölüm 6: CSS variables + basit CSS */
+/* Project.md Faz 7: Comprehensive CSS customization system */
 
 :root {
+  /* === CORE COLORS === */
   --lookup-select-color-primary: #0066cc;
+  --lookup-select-color-primary-hover: #0052a3;
+  --lookup-select-color-primary-active: #004085;
   --lookup-select-color-bg: #ffffff;
+  --lookup-select-color-bg-secondary: #f8f9fa;
+  --lookup-select-color-bg-hover: #f3f4f6;
   --lookup-select-color-text: #333333;
+  --lookup-select-color-text-secondary: #6b7280;
+  --lookup-select-color-text-muted: #9ca3af;
   --lookup-select-color-border: #d1d5db;
-  --lookup-select-color-hover: #f3f4f6;
+  --lookup-select-color-border-focus: var(--lookup-select-color-primary);
+  --lookup-select-color-border-hover: #9ca3af;
+  --lookup-select-color-error: #dc2626;
+  --lookup-select-color-success: #16a34a;
+  --lookup-select-color-warning: #d97706;
+
+  /* === LAYOUT === */
   --lookup-select-border-radius: 6px;
+  --lookup-select-border-radius-sm: 4px;
+  --lookup-select-border-radius-lg: 8px;
+  --lookup-select-border-width: 1px;
   --lookup-select-spacing: 8px;
+  --lookup-select-spacing-sm: 4px;
+  --lookup-select-spacing-lg: 12px;
+  --lookup-select-spacing-xl: 16px;
+
+  /* === TYPOGRAPHY === */
+  --lookup-select-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   --lookup-select-font-size: 14px;
+  --lookup-select-font-size-sm: 12px;
+  --lookup-select-font-size-lg: 16px;
+  --lookup-select-font-weight: 400;
+  --lookup-select-font-weight-medium: 500;
+  --lookup-select-font-weight-semibold: 600;
+  --lookup-select-line-height: 1.4;
+
+  /* === SHADOWS === */
+  --lookup-select-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --lookup-select-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --lookup-select-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --lookup-select-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* === TRANSITIONS === */
+  --lookup-select-transition-duration: 150ms;
+  --lookup-select-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* === Z-INDEX === */
+  --lookup-select-z-index-dropdown: 1000;
+  --lookup-select-z-index-modal: 1050;
+  --lookup-select-z-index-overlay: 1040;
+
+  /* === COMPONENT SPECIFIC === */
+  /* Trigger */
+  --lookup-select-trigger-height: 36px;
+  --lookup-select-trigger-padding-x: calc(var(--lookup-select-spacing) * 1.5);
+  --lookup-select-trigger-padding-y: var(--lookup-select-spacing);
+  --lookup-select-trigger-gap: var(--lookup-select-spacing-sm);
+  
+  /* Modal */
+  --lookup-select-modal-width: 600px;
+  --lookup-select-modal-max-height: 500px;
+  --lookup-select-modal-padding: var(--lookup-select-spacing-xl);
+  
+  /* Grid */
+  --lookup-select-grid-row-height: 40px;
+  --lookup-select-grid-header-height: 44px;
+  --lookup-select-grid-cell-padding-x: var(--lookup-select-spacing-lg);
+  --lookup-select-grid-cell-padding-y: var(--lookup-select-spacing);
+  
+  /* Pagination */
+  --lookup-select-pagination-button-size: 32px;
+  --lookup-select-pagination-gap: var(--lookup-select-spacing-sm);
+  
+  /* Search */
+  --lookup-select-search-height: 36px;
+  --lookup-select-search-padding-x: var(--lookup-select-spacing-lg);
 }
 
 /* === ROOT === */
 .lookup-select {
   position: relative;
   display: inline-block;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: var(--lookup-select-font-family);
   font-size: var(--lookup-select-font-size);
+  font-weight: var(--lookup-select-font-weight);
+  line-height: var(--lookup-select-line-height);
   color: var(--lookup-select-color-text);
+}
+
+.lookup-select * {
+  box-sizing: border-box;
+}
+
+.lookup-select:focus-within {
+  outline: none;
 }
 
 /* === TRIGGER === */
 .lookup-select__trigger {
   display: flex;
   align-items: center;
-  min-height: 36px;
-  padding: var(--lookup-select-spacing) calc(var(--lookup-select-spacing) * 1.5);
+  justify-content: space-between;
+  min-height: var(--lookup-select-trigger-height);
+  padding: var(--lookup-select-trigger-padding-y) var(--lookup-select-trigger-padding-x);
   background: var(--lookup-select-color-bg);
-  border: 1px solid var(--lookup-select-color-border);
+  border: var(--lookup-select-border-width) solid var(--lookup-select-color-border);
   border-radius: var(--lookup-select-border-radius);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--lookup-select-transition-duration) var(--lookup-select-transition-timing);
   min-width: 200px;
+  font-size: var(--lookup-select-font-size);
+  font-weight: var(--lookup-select-font-weight);
+  line-height: var(--lookup-select-line-height);
+  color: var(--lookup-select-color-text);
+  box-shadow: var(--lookup-select-shadow-sm);
 }
 
 .lookup-select__trigger:hover {
-  border-color: var(--lookup-select-color-primary);
+  border-color: var(--lookup-select-color-border-hover);
+  background: var(--lookup-select-color-bg-hover);
+  box-shadow: var(--lookup-select-shadow);
 }
 
 .lookup-select__trigger:focus {
   outline: none;
-  border-color: var(--lookup-select-color-primary);
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+  border-color: var(--lookup-select-color-border-focus);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2), var(--lookup-select-shadow);
+}
+
+.lookup-select__trigger--open {
+  border-color: var(--lookup-select-color-border-focus);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2), var(--lookup-select-shadow);
+}
+
+.lookup-select__trigger--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: var(--lookup-select-color-bg-secondary);
+}
+
+.lookup-select__trigger--error {
+  border-color: var(--lookup-select-color-error);
 }
 
 .lookup-select__trigger-content {
   flex: 1;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
+  gap: var(--lookup-select-trigger-gap);
+  min-width: 0; /* Allow text truncation */
 }
 
-.lookup-select__placeholder {
-  color: #9ca3af;
+.lookup-select__trigger-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.lookup-select__selected-text {
-  font-weight: 500;
+.lookup-select__trigger-placeholder {
+  color: var(--lookup-select-color-text-muted);
+  font-style: italic;
 }
 
 .lookup-select__trigger-icon {
-  margin-left: var(--lookup-select-spacing);
   display: flex;
   align-items: center;
-  color: #6b7280;
-  transition: transform 0.2s ease;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--lookup-select-color-text-secondary);
+  transition: transform var(--lookup-select-transition-duration) var(--lookup-select-transition-timing);
 }
 
-.lookup-select__trigger[aria-expanded="true"] .lookup-select__trigger-icon {
+.lookup-select__trigger--open .lookup-select__trigger-icon {
   transform: rotate(180deg);
 }
 
-/* === TAGS === */
-.lookup-select__tags {
+/* Selected items styling */
+.lookup-select__selected-items {
   display: flex;
+  align-items: center;
+  gap: var(--lookup-select-spacing-sm);
   flex-wrap: wrap;
-  gap: 4px;
+  min-width: 0;
 }
 
-.lookup-select__tag {
+.lookup-select__selected-item {
   display: inline-flex;
   align-items: center;
   background: var(--lookup-select-color-primary);
   color: white;
-  padding: 2px 6px;
-  border-radius: calc(var(--lookup-select-border-radius) / 2);
-  font-size: 12px;
-  font-weight: 500;
+  padding: 2px var(--lookup-select-spacing-sm);
+  border-radius: var(--lookup-select-border-radius-sm);
+  font-size: var(--lookup-select-font-size-sm);
+  font-weight: var(--lookup-select-font-weight-medium);
+  max-width: 120px;
 }
 
-.lookup-select__tag--more {
-  background: #6b7280;
+.lookup-select__selected-item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.lookup-select__tag-remove {
+.lookup-select__selected-item--more {
+  background: var(--lookup-select-color-text-secondary);
+}
+
+.lookup-select__selected-item-remove {
   background: none;
   border: none;
   color: inherit;
-  margin-left: 4px;
+  margin-left: var(--lookup-select-spacing-sm);
   cursor: pointer;
   padding: 0;
-  font-size: 14px;
+  font-size: var(--lookup-select-font-size);
   line-height: 1;
+  opacity: 0.8;
 }
 
-.lookup-select__tag-remove:hover {
-  opacity: 0.8;
+.lookup-select__selected-item-remove:hover {
+  opacity: 1;
 }
 
 /* === MODAL === */
@@ -416,9 +536,89 @@
 
 .lookup-select__error {
   text-align: center;
-  color: #dc2626;
+  color: var(--lookup-select-color-error);
 }
 
 .lookup-select__empty {
   text-align: center;
+  color: var(--lookup-select-color-text-secondary);
+  padding: var(--lookup-select-spacing-xl);
+  font-style: italic;
+}
+
+/* === THEME VARIANTS === */
+
+/* Dark Theme */
+.lookup-select--theme-dark {
+  --lookup-select-color-primary: #3b82f6;
+  --lookup-select-color-primary-hover: #2563eb;
+  --lookup-select-color-primary-active: #1d4ed8;
+  --lookup-select-color-bg: #1f2937;
+  --lookup-select-color-bg-secondary: #374151;
+  --lookup-select-color-bg-hover: #374151;
+  --lookup-select-color-text: #f9fafb;
+  --lookup-select-color-text-secondary: #d1d5db;
+  --lookup-select-color-text-muted: #9ca3af;
+  --lookup-select-color-border: #4b5563;
+  --lookup-select-color-border-focus: var(--lookup-select-color-primary);
+  --lookup-select-color-border-hover: #6b7280;
+  --lookup-select-color-error: #ef4444;
+  --lookup-select-color-success: #10b981;
+  --lookup-select-color-warning: #f59e0b;
+}
+
+/* Minimal Theme */
+.lookup-select--theme-minimal {
+  --lookup-select-color-primary: #000000;
+  --lookup-select-color-primary-hover: #1f2937;
+  --lookup-select-color-primary-active: #374151;
+  --lookup-select-color-bg: #ffffff;
+  --lookup-select-color-bg-secondary: #ffffff;
+  --lookup-select-color-bg-hover: #f9fafb;
+  --lookup-select-color-text: #000000;
+  --lookup-select-color-text-secondary: #4b5563;
+  --lookup-select-color-text-muted: #9ca3af;
+  --lookup-select-color-border: #e5e7eb;
+  --lookup-select-color-border-focus: #000000;
+  --lookup-select-color-border-hover: #d1d5db;
+  --lookup-select-border-radius: 0px;
+  --lookup-select-border-radius-sm: 0px;
+  --lookup-select-border-radius-lg: 0px;
+  --lookup-select-shadow-sm: none;
+  --lookup-select-shadow: none;
+  --lookup-select-shadow-md: none;
+  --lookup-select-shadow-lg: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Compact Theme */
+.lookup-select--theme-compact {
+  --lookup-select-spacing: 6px;
+  --lookup-select-spacing-sm: 3px;
+  --lookup-select-spacing-lg: 9px;
+  --lookup-select-spacing-xl: 12px;
+  --lookup-select-font-size: 13px;
+  --lookup-select-font-size-sm: 11px;
+  --lookup-select-font-size-lg: 14px;
+  --lookup-select-trigger-height: 32px;
+  --lookup-select-grid-row-height: 36px;
+  --lookup-select-grid-header-height: 40px;
+  --lookup-select-modal-padding: var(--lookup-select-spacing-lg);
+  --lookup-select-border-radius: 4px;
+  --lookup-select-border-radius-sm: 2px;
+  --lookup-select-border-radius-lg: 6px;
+}
+
+/* Size Variants */
+.lookup-select--size-small {
+  --lookup-select-font-size: 12px;
+  --lookup-select-trigger-height: 28px;
+  --lookup-select-spacing: 6px;
+  --lookup-select-grid-row-height: 32px;
+}
+
+.lookup-select--size-large {
+  --lookup-select-font-size: 16px;
+  --lookup-select-trigger-height: 44px;
+  --lookup-select-spacing: 12px;
+  --lookup-select-grid-row-height: 48px;
 }

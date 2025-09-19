@@ -6,6 +6,16 @@ import { ReactNode } from 'react';
 export type SelectMode = 'single' | 'multiple';
 
 /**
+ * Theme türleri
+ */
+export type Theme = 'default' | 'dark' | 'minimal' | 'compact';
+
+/**
+ * Size variants
+ */
+export type Size = 'small' | 'medium' | 'large';
+
+/**
  * Grid kolonu tanımı
  * @template T - Veri türü
  */
@@ -236,6 +246,10 @@ export type LookupSelectProps<T> = {
   pageSize?: number;
 
   // === Temalandırma ===
+  /** Önceden tanımlanmış tema */
+  variant?: Theme;
+  /** Boyut variant'ı */
+  size?: Size;
   /** CSS sınıf adları */
   classNames?: ClassNames;
   /** Inline stiller */

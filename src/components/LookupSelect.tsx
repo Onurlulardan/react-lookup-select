@@ -17,11 +17,14 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     mode = 'single',
     data = [],
     dataSource,
+    variant = 'default',
+    size = 'medium',
     icon,
     renderTrigger,
     modalTitle,
     classNames,
     styles,
+    theme,
     i18n,
     pageSize = 20,
     selectableRow,
@@ -171,11 +174,50 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     />
   );
 
+  // Generate theme class names
+  const getThemeClasses = () => {
+    const classes = ['lookup-select'];
+
+    if (variant && variant !== 'default') {
+      classes.push(`lookup-select--theme-${variant}`);
+    }
+
+    if (size && size !== 'medium') {
+      classes.push(`lookup-select--size-${size}`);
+    }
+
+    if (classNames?.root) {
+      classes.push(classNames.root);
+    }
+
+    return classes.join(' ');
+  };
+
+  // Generate inline theme styles
+  const getThemeStyles = () => {
+    const themeStyles: Record<string, string> = {};
+
+    if (theme) {
+      if (theme.colorPrimary)
+        themeStyles['--lookup-select-color-primary'] = theme.colorPrimary;
+      if (theme.colorBg)
+        themeStyles['--lookup-select-color-bg'] = theme.colorBg;
+      if (theme.colorText)
+        themeStyles['--lookup-select-color-text'] = theme.colorText;
+      if (theme.borderRadius)
+        themeStyles['--lookup-select-border-radius'] =
+          typeof theme.borderRadius === 'number'
+            ? `${theme.borderRadius}px`
+            : theme.borderRadius;
+      if (theme.spacing)
+        themeStyles['--lookup-select-spacing'] = `${theme.spacing}px`;
+    }
+
+    return { ...themeStyles, ...styles?.root } as React.CSSProperties;
+  };
+
   return (
-    <div
-      className={`lookup-select ${classNames?.root || ''}`}
-      style={styles?.root}
-    >
+    <div className={getThemeClasses()} style={getThemeStyles()}>
       <Trigger
         isOpen={modalOpen}
         onToggle={openModal}

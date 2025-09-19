@@ -125,27 +125,33 @@ const CategoryBadgeCell = ({ row }: { row: any }) => (
 );
 
 // Custom trigger component
-const CustomTrigger = ({ selectedText, isOpen, onClick }: any) => (
-  <button
-    onClick={onClick}
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-      padding: '12px 16px',
-      border: '2px solid #ddd',
-      borderRadius: '8px',
-      backgroundColor: isOpen ? '#f5f5f5' : 'white',
-      cursor: 'pointer',
-      minWidth: '300px',
-      fontSize: '14px',
-    }}
-  >
-    <span>🛍️</span>
-    <span>{selectedText || 'Choose a product...'}</span>
-    <span style={{ marginLeft: 'auto' }}>{isOpen ? '▲' : '▼'}</span>
-  </button>
-);
+const CustomTrigger = (selectedValue: any) => {
+  const selectedText = selectedValue
+    ? selectedValue.name || productMapper.getText(selectedValue)
+    : null;
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        padding: '12px 16px',
+        border: '2px solid #ddd',
+        borderRadius: '8px',
+        backgroundColor: 'white',
+        cursor: 'pointer',
+        minWidth: '300px',
+        fontSize: '14px',
+        transition: 'all 0.2s ease',
+      }}
+    >
+      <span>🛍️</span>
+      <span>{selectedText || 'Choose a product...'}</span>
+      <span style={{ marginLeft: 'auto', color: '#666' }}>▼</span>
+    </div>
+  );
+};
 
 const meta: Meta<typeof LookupSelect> = {
   title: 'Components/LookupSelect/Custom Rendering',

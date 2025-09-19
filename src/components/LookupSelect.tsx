@@ -1,6 +1,11 @@
 import React from 'react';
 import { LookupSelectProps } from '../internal/types';
 import { useLookupSelectState } from '../internal/state';
+import {
+  useKeyboardNavigation,
+  useFocusManagement,
+  useScreenReaderAnnouncements,
+} from '../hooks/useAccessibility';
 import { Trigger } from './Trigger';
 import { Modal, SearchInput, ModalFooter } from './Modal';
 import { Grid } from './Grid';
@@ -51,7 +56,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     cancelSelection,
   } = useLookupSelectState(props);
 
-  // i18n defaults
+  // i18n defaults - comprehensive multilingual support
   const texts = {
     triggerPlaceholder: 'Seçiniz',
     searchPlaceholder: 'Ara...',
@@ -59,7 +64,19 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     cancelText: 'Vazgeç',
     modalTitle: 'Kayıt Seç',
     emptyText: 'Kayıt bulunamadı',
+    loadingText: 'Yükleniyor...',
+    errorPrefix: 'Hata:',
     selectedCount: (n: number) => `${n} seçildi`,
+    clearText: 'Temizle',
+    selectAllLabel: 'Tümünü seç',
+    selectRowLabel: (rowText: string) => `${rowText} seçeneğini seç`,
+    sortColumnLabel: (columnTitle: string) =>
+      `${columnTitle} kolonuna göre sırala`,
+    closeModalLabel: 'Modalı kapat',
+    paginationInfo: (current: number, total: number) =>
+      `Sayfa ${current} / ${total}`,
+    totalRecords: (total: number) => `${total} kayıt`,
+    searchResults: (count: number) => `${count} sonuç bulundu`,
     ...i18n,
   };
 
@@ -80,6 +97,20 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     virtualRowHeight,
     pageSize,
   ]);
+
+  // Accessibility hooks
+  const { announce } = useScreenReaderAnnouncements();
+
+  useFocusManagement(modalOpen);
+
+  useKeyboardNavigation({
+    isModalOpen: modalOpen,
+    onClose: closeModal,
+    onConfirm: confirmSelection,
+    currentData: [],
+    selectedRows: currentSelections,
+    mode,
+  });
 
   // Search state
   const [searchValue, setSearchValue] = React.useState('');

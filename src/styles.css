@@ -704,3 +704,42 @@
   text-align: center;
   padding: var(--lookup-select-grid-cell-padding-y) var(--lookup-select-spacing);
 }
+
+/* === ACCESSIBILITY === */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .lookup-select {
+    --lookup-select-color-primary: #0000FF;
+    --lookup-select-color-bg: #FFFFFF;
+    --lookup-select-color-text: #000000;
+    --lookup-select-color-border: #000000;
+    --lookup-select-shadow: none;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .lookup-select * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible support */
+.lookup-select *:focus-visible {
+  outline: 2px solid var(--lookup-select-color-primary);
+  outline-offset: 2px;
+}

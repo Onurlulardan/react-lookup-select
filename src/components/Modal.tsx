@@ -14,6 +14,11 @@ interface ModalProps {
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
+  // ARIA & Accessibility props
+  ariaLabel?: string;
+  ariaLabelledBy?: string;
+  ariaDescribedBy?: string;
+  closeButtonLabel?: string;
 }
 
 export function Modal({
@@ -23,6 +28,10 @@ export function Modal({
   className,
   style,
   children,
+  ariaLabel,
+  ariaLabelledBy,
+  ariaDescribedBy,
+  closeButtonLabel = 'Modalı kapat',
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -111,15 +120,24 @@ export function Modal({
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="lookup-select__modal-overlay" onClick={onClose}>
+    <div
+      className="lookup-select__modal-overlay"
+      onClick={onClose}
+      role="presentation"
+    >
       <div
         ref={modalRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="lookup-select-modal-title"
+        aria-label={ariaLabel}
+        aria-labelledby={
+          ariaLabelledBy || (title ? 'lookup-select-modal-title' : undefined)
+        }
+        aria-describedby={ariaDescribedBy}
         className={`lookup-select__modal ${className || ''}`}
         style={style}
         onClick={(e) => e.stopPropagation()}
+        tabIndex={-1}
       >
         <div className="lookup-select__modal-header">
           <h2
@@ -132,13 +150,16 @@ export function Modal({
             type="button"
             className="lookup-select__modal-close"
             onClick={onClose}
-            aria-label="Modalı kapat"
+            aria-label={closeButtonLabel}
+            tabIndex={0}
           >
             ×
           </button>
         </div>
 
-        <div className="lookup-select__modal-body">{children}</div>
+        <div className="lookup-select__modal-body" role="document">
+          {children}
+        </div>
       </div>
     </div>,
     document.body

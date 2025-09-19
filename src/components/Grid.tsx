@@ -147,7 +147,13 @@ export function Grid<T>({
 
   return (
     <div className={`lookup-select__grid ${className || ''}`} style={style}>
-      <table className="lookup-select__table">
+      <table
+        className="lookup-select__table"
+        role="grid"
+        aria-label="Kayıt listesi"
+        aria-rowcount={data.length}
+        aria-multiselectable={mode === 'multiple'}
+      >
         <thead className="lookup-select__table-head">
           <tr>
             {/* Checkbox column for multiple mode */}

@@ -109,7 +109,7 @@ export type ReturnMap<T> = {
 };
 
 /**
- * i18n metin çevirileri
+ * i18n metin çevirileri - Comprehensive multilingual support
  */
 export type i18nStrings = {
   /** Trigger placeholder - "Seçiniz" */
@@ -124,8 +124,40 @@ export type i18nStrings = {
   modalTitle?: string;
   /** Boş durum metni - "Kayıt bulunamadı" */
   emptyText?: string;
+  /** Yükleniyor metni - "Yükleniyor..." */
+  loadingText?: string;
+  /** Hata durumu öneki - "Hata:" */
+  errorPrefix?: string;
   /** Seçilen sayısı - "{n} seçildi" */
   selectedCount?: (n: number) => string;
+  /** Temizle butonu - "Temizle" */
+  clearText?: string;
+  /** Tümünü seç checkbox aria-label */
+  selectAllLabel?: string;
+  /** Satır seçim checkbox aria-label */
+  selectRowLabel?: (rowText: string) => string;
+  /** Sıralama butonu aria-label */
+  sortColumnLabel?: (columnTitle: string) => string;
+  /** Modal kapatma butonu aria-label */
+  closeModalLabel?: string;
+  /** Sayfalama bilgisi - "Sayfa {current} / {total}" */
+  paginationInfo?: (current: number, total: number) => string;
+  /** Toplam kayıt sayısı - "{total} kayıt" */
+  totalRecords?: (total: number) => string;
+  /** Sayfa boyutu seçici - "{size} kayıt göster" */
+  pageSize?: (size: number) => string;
+  /** İlk sayfa - "İlk" */
+  firstPage?: string;
+  /** Son sayfa - "Son" */
+  lastPage?: string;
+  /** Önceki sayfa - "Önceki" */
+  previousPage?: string;
+  /** Sonraki sayfa - "Sonraki" */
+  nextPage?: string;
+  /** Arama sonuç bilgisi - "{count} sonuç bulundu" */
+  searchResults?: (count: number) => string;
+  /** Filtre temizleme - "Filtreleri temizle" */
+  clearFilters?: string;
 };
 
 /**

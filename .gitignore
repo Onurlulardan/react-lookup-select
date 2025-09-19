@@ -44,3 +44,4 @@ storybook-static/
 # Lock files (keep package-lock.json for consistency)
 yarn.lock
 pnpm-lock.yaml
+*storybook.log

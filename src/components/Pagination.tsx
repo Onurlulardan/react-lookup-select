@@ -1,8 +1,11 @@
 import React from 'react';
 
 /**
- * Pagination bileşeni - server-side data için sayfalama
- * Project.md Faz 6: total, page senkronizasyonu
+ * Pagination component - pagination for server-side data
+ * Project.md Phas              }}
+              onClick={() => onPageChange(pageNum)}
+              aria-label={`Page ${pageNum}`}
+              aria-current={currentPage === pageNum ? 'page' : undefined} total, page synchronization
  */
 
 interface PaginationProps {
@@ -66,10 +69,10 @@ export function Pagination({
       <div className="lookup-select__pagination-info">
         {totalCount > 0 ? (
           <>
-            {startRecord}-{endRecord} / {totalCount} kayıt
+            {startRecord}-{endRecord} / {totalCount} records
           </>
         ) : (
-          '0 kayıt'
+          '0 records'
         )}
       </div>
 
@@ -80,7 +83,7 @@ export function Pagination({
           className="lookup-select__pagination-button"
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
-          aria-label="Önceki sayfa"
+          aria-label="Previous page"
         >
           ‹
         </button>
@@ -122,7 +125,7 @@ export function Pagination({
           className="lookup-select__pagination-button"
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
-          aria-label="Sonraki sayfa"
+          aria-label="Next page"
         >
           ›
         </button>

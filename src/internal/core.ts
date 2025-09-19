@@ -6,12 +6,12 @@ import {
 } from './types';
 
 /**
- * Headless çekirdek mantık - seçim durumu, query state, mapping ve dönüş değeri üretimi
- * Project.md Bölüm 3: İç Mimari implementasyonu
+ * Headless core logic - selection state, query state, mapping and return value generation
+ * Project.md Section 3: Internal Architecture implementation
  */
 
 /**
- * Seçim durumu - Set<rowId> + Map<rowId, row> hızlı erişim
+ * Selection state - Set<rowId> + Map<rowId, row> for fast access
  */
 export interface SelectionState<T> {
   selectedIds: Set<string | number>;
@@ -19,7 +19,7 @@ export interface SelectionState<T> {
 }
 
 /**
- * Seçim durumu oluşturucu
+ * Selection state creator
  */
 export function createSelectionState<T>(): SelectionState<T> {
   return {
@@ -29,7 +29,7 @@ export function createSelectionState<T>(): SelectionState<T> {
 }
 
 /**
- * Seçim durumunu güncelleme fonksiyonları
+ * Selection state update functions
  */
 export class SelectionManager<T> {
   private state: SelectionState<T>;
@@ -47,7 +47,7 @@ export class SelectionManager<T> {
   }
 
   /**
-   * Satır seçimi/seçim kaldırma
+   * Row selection/deselection
    */
   toggleRow(row: T): SelectionState<T> {
     const id = this.mapper.getId(row);
@@ -57,13 +57,13 @@ export class SelectionManager<T> {
     };
 
     if (this.state.selectedIds.has(id)) {
-      // Seçimi kaldır
+      // Remove selection
       newState.selectedIds.delete(id);
       newState.selectedRows.delete(id);
     } else {
-      // Seç
+      // Select
       if (this.mode === 'single') {
-        // Tekli modda diğerlerini temizle
+        // Clear others in single mode
         newState.selectedIds.clear();
         newState.selectedRows.clear();
       }
@@ -76,14 +76,14 @@ export class SelectionManager<T> {
   }
 
   /**
-   * Seçili satırları array olarak döndür
+   * Return selected rows as array
    */
   getSelectedRows(): T[] {
     return Array.from(this.state.selectedRows.values());
   }
 
   /**
-   * Satır seçili mi kontrol et
+   * Check if row is selected
    */
   isRowSelected(row: T): boolean {
     const id = this.mapper.getId(row);
@@ -91,7 +91,7 @@ export class SelectionManager<T> {
   }
 
   /**
-   * Tüm seçimleri temizle
+   * Clear all selections
    */
   clearSelection(): SelectionState<T> {
     this.state = createSelectionState<T>();
@@ -99,7 +99,7 @@ export class SelectionManager<T> {
   }
 
   /**
-   * Mevcut state'i al
+   * Get current state
    */
   getState(): SelectionState<T> {
     return this.state;
@@ -107,7 +107,7 @@ export class SelectionManager<T> {
 }
 
 /**
- * Query state oluşturucu - default değerlerle
+ * Query state creator - with default values
  */
 export function createQueryState(pageSize: number = 20): QueryState {
   return {
@@ -120,7 +120,7 @@ export function createQueryState(pageSize: number = 20): QueryState {
 }
 
 /**
- * Query state güncelleme fonksiyonları
+ * Query state update functions
  */
 export class QueryManager {
   private state: QueryState;
@@ -130,7 +130,7 @@ export class QueryManager {
   }
 
   /**
-   * Arama terimi güncelle - sayfa 1'e döner
+   * Update search term - returns to page 1
    */
   updateSearch(search: string): QueryState {
     this.state = { ...this.state, search, page: 1 };
@@ -138,7 +138,7 @@ export class QueryManager {
   }
 
   /**
-   * Sayfalama güncelle
+   * Update pagination
    */
   updatePage(page: number): QueryState {
     this.state = { ...this.state, page };
@@ -146,7 +146,7 @@ export class QueryManager {
   }
 
   /**
-   * Sıralama güncelle - sayfa 1'e döner
+   * Update sorting - returns to page 1
    */
   updateSort(sortBy: string, sortDir: 'asc' | 'desc'): QueryState {
     this.state = { ...this.state, sortBy, sortDir, page: 1 };
@@ -154,7 +154,7 @@ export class QueryManager {
   }
 
   /**
-   * Sayfa boyutu güncelle - sayfa 1'e döner
+   * Update page size - returns to page 1
    */
   updatePageSize(pageSize: number): QueryState {
     this.state = { ...this.state, pageSize, page: 1 };
@@ -162,7 +162,7 @@ export class QueryManager {
   }
 
   /**
-   * Mevcut state'i al
+   * Get current state
    */
   getState(): QueryState {
     return this.state;
@@ -170,7 +170,7 @@ export class QueryManager {
 }
 
 /**
- * Dönüş değeri üretimi - project.md Bölüm 4 mantığı
+ * Return value generation - project.md Section 4 logic
  */
 export function mapReturnValue<T>(
   selectedRows: T[],
@@ -189,18 +189,18 @@ export function mapReturnValue<T>(
 
   switch (returnShape) {
     case 'id-text':
-      // returnShape = 'id-text' → Tekil: { id, text } | Çoğul: { id, text }[]
+      // returnShape = 'id-text' → Single: { id, text } | Multiple: { id, text }[]
       mappedValues = selectedRows.map((row) => ({
         id: mapper.getId(row),
         text: mapper.getText(row),
       }));
       break;
     case 'row':
-      // returnShape = 'row' → Tekil: T | Çoğul: T[]
+      // returnShape = 'row' → Single: T | Multiple: T[]
       mappedValues = selectedRows;
       break;
     case 'custom':
-      // returnShape = 'custom' → returnMap.map(row) sonucu
+      // returnShape = 'custom' → returnMap.map(row) result
       if (!returnMap) {
         throw new Error('returnMap is required when returnShape is "custom"');
       }

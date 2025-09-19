@@ -2,9 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 /**
- * Modal bileşeni - header/search/body/footer
- * Project.md Bölüm 3: Modal role="dialog", focus trap, ESC ile kapanma
- * Project.md Bölüm 7: modal açılınca ilk odak arama inputu
+ * Modal component - header/search/body/footer
  */
 
 interface ModalProps {
@@ -24,14 +22,14 @@ interface ModalProps {
 export function Modal({
   isOpen,
   onClose,
-  title = 'Kayıt Seç',
+  title = 'Select Record',
   className,
   style,
   children,
   ariaLabel,
   ariaLabelledBy,
   ariaDescribedBy,
-  closeButtonLabel = 'Modalı kapat',
+  closeButtonLabel = 'Close modal',
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -167,7 +165,7 @@ export function Modal({
 }
 
 /**
- * Search input bileşeni - modal içinde arama için
+ * Search input component - for searching within modal
  */
 interface SearchInputProps {
   value: string;
@@ -179,7 +177,7 @@ interface SearchInputProps {
 export function SearchInput({
   value,
   onChange,
-  placeholder = 'Ara...',
+  placeholder = 'Search...',
   className,
 }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -200,7 +198,7 @@ export function SearchInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="lookup-select__search-input"
-        aria-label="Kayıtları ara"
+        aria-label="Search records"
       />
       <div className="lookup-select__search-icon">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
@@ -212,7 +210,7 @@ export function SearchInput({
 }
 
 /**
- * Modal footer - confirm/cancel butonları
+ * Modal footer - confirm/cancel buttons
  */
 interface ModalFooterProps {
   onConfirm: () => void;
@@ -226,15 +224,15 @@ interface ModalFooterProps {
 export function ModalFooter({
   onConfirm,
   onCancel,
-  confirmText = 'Uygula',
-  cancelText = 'Vazgeç',
+  confirmText = 'Apply',
+  cancelText = 'Cancel',
   selectedCount = 0,
   className,
 }: ModalFooterProps) {
   return (
     <div className={`lookup-select__modal-footer ${className || ''}`}>
       <div className="lookup-select__selected-count">
-        {selectedCount > 0 ? `${selectedCount} seçildi` : 'Seçim yapılmadı'}
+        {selectedCount > 0 ? `${selectedCount} selected` : 'No selection'}
       </div>
 
       <div className="lookup-select__modal-actions">

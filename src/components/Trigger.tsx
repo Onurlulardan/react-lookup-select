@@ -2,8 +2,7 @@ import React from 'react';
 import { LookupSelectProps } from '../internal/types';
 
 /**
- * Trigger bileşeni - ComboBox görünümü, tıklanınca modal açılır
- * Project.md Bölüm 3: Trigger role="button" + aria-haspopup="dialog"
+ * Trigger component - ComboBox appearance, opens modal when clicked
  */
 
 interface TriggerProps<T> {
@@ -25,7 +24,7 @@ export function Trigger<T>({
   isOpen,
   onToggle,
   selectedItems,
-  placeholder = 'Seçiniz',
+  placeholder = 'Please select',
   icon,
   mapper,
   mode = 'single',
@@ -38,7 +37,7 @@ export function Trigger<T>({
   const selectedValue =
     mode === 'single' ? selectedItems[0] || null : selectedItems;
 
-  // Custom trigger varsa onu kullan
+  // Use custom trigger if available
   if (renderTrigger) {
     return (
       <div
@@ -61,7 +60,7 @@ export function Trigger<T>({
     );
   }
 
-  // Default trigger görünümü
+  // Default trigger appearance
   return (
     <div
       role="button"
@@ -105,7 +104,7 @@ export function Trigger<T>({
             ))}
             {selectedItems.length > 3 && (
               <span className="lookup-select__tag lookup-select__tag--more">
-                +{selectedItems.length - 3} daha
+                +{selectedItems.length - 3} more
               </span>
             )}
           </div>
@@ -113,7 +112,7 @@ export function Trigger<T>({
       </div>
 
       <div className="lookup-select__trigger-actions">
-        {/* Clear button - sadece seçim varsa göster */}
+        {/* Clear button - only show if there are selections */}
         {selectedItems.length > 0 && onClear && (
           <button
             type="button"

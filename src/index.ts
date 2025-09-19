@@ -1,12 +1,12 @@
 // Main export file for @onurlulardan/react-lookup-select
 export { LookupSelect } from './components/LookupSelect';
 
-// Public API Types - project.md Bölüm 2'ye göre
+// Public API Types - according to project.md Section 2
 export type {
-  // Ana Props Interface
+  // Main Props Interface
   LookupSelectProps,
 
-  // Temel Tipler
+  // Core Types
   SelectMode,
   ColumnDef,
   QueryState,
@@ -16,7 +16,7 @@ export type {
   ReturnShape,
   ReturnMap,
 
-  // Temalandırma ve Özelleştirme
+  // Theming and Customization
   i18nStrings,
   ComponentsOverrides,
   ClassNames,

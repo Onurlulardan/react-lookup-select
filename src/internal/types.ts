@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
 
 /**
- * Seçim modu: tekli veya çoklu
+ * Selection mode: single or multiple
  */
 export type SelectMode = 'single' | 'multiple';
 
 /**
- * Theme türleri
+ * Theme types
  */
 export type Theme = 'default' | 'dark' | 'minimal' | 'compact';
 
@@ -16,316 +16,316 @@ export type Theme = 'default' | 'dark' | 'minimal' | 'compact';
 export type Size = 'small' | 'medium' | 'large';
 
 /**
- * Grid kolonu tanımı
- * @template T - Veri türü
+ * Grid column definition
+ * @template T - Data type
  */
 export type ColumnDef<T> = {
-  /** Veri alanı (string de desteklenir) */
+  /** Data field (string is also supported) */
   key: keyof T | string;
-  /** Kolon başlığı */
+  /** Column title */
   title: string;
-  /** Opsiyonel genişlik */
+  /** Optional width */
   width?: number | string;
-  /** Server/client sort tetikleyebilir */
+  /** Can trigger server/client sort */
   sortable?: boolean;
-  /** Özel hücre render fonksiyonu */
+  /** Custom cell render function */
   render?: (row: T, index: number) => ReactNode;
 };
 
 /**
- * Sorgu durumu - sayfalama, arama ve sıralama bilgileri
+ * Query state - pagination, search and sorting information
  */
 export type QueryState = {
-  /** Sayfa numarası */
+  /** Page number */
   page: number;
-  /** Sayfa boyutu */
+  /** Page size */
   pageSize: number;
-  /** Arama metni */
+  /** Search text */
   search?: string;
-  /** Sıralama kolonu */
+  /** Sort column */
   sortBy?: string;
-  /** Sıralama yönü */
+  /** Sort direction */
   sortDir?: 'asc' | 'desc';
 };
 
 /**
- * DataSource fonksiyonunun döndürdüğü sonuç
- * @template T - Veri türü
+ * DataSource function return result
+ * @template T - Data type
  */
 export type DataSourceResult<T> = {
-  /** Satır verileri */
+  /** Row data */
   rows: T[];
-  /** Toplam kayıt sayısı */
+  /** Total record count */
   total: number;
 };
 
 /**
- * Server-side veri kaynağı fonksiyonu
- * @template T - Veri türü
+ * Server-side data source function
+ * @template T - Data type
  */
 export type DataSourceFn<T> = (q: QueryState) => Promise<DataSourceResult<T>>;
 
 /**
- * Değer mapping fonksiyonları
- * @template T - Veri türü
+ * Value mapping functions
+ * @template T - Data type
  */
 export type ValueMapper<T> = {
-  /** ID alma fonksiyonu */
+  /** ID getter function */
   getId: (row: T) => string | number;
-  /** Metin alma fonksiyonu - örn: (r) => `${r.name} ${r.surname}` */
+  /** Text getter function - e.g: (r) => `${r.name} ${r.surname}` */
   getText: (row: T) => string;
-  /** İsteğe bağlı: disable kontrolü */
+  /** Optional: disable check */
   getDisabled?: (row: T) => boolean;
 };
 
 /**
- * Virtualization konfigürasyonu
+ * Virtualization configuration
  */
 export type VirtualizationConfig = {
-  /** Virtualization aktif mi? */
+  /** Is virtualization active? */
   enabled: boolean;
-  /** Sabit satır yüksekliği (px) */
+  /** Fixed row height (px) */
   rowHeight: number;
-  /** Görünür alan dışında render edilecek ek satır sayısı */
+  /** Number of extra rows to render outside visible area */
   overscan: number;
-  /** Container yüksekliği (px) */
+  /** Container height (px) */
   containerHeight: number;
-  /** Virtualization threshold - bu sayıdan fazla item'da aktif olur */
+  /** Virtualization threshold - activates with more items than this number */
   threshold: number;
 };
 
 /**
- * Dönüş değeri şekli
+ * Return value shape
  */
 export type ReturnShape = 'id-text' | 'row' | 'custom';
 
 /**
- * Custom dönüş değeri mapping'i
- * @template T - Veri türü
+ * Custom return value mapping
+ * @template T - Data type
  */
 export type ReturnMap<T> = {
-  /** Custom mapping fonksiyonu - örn: (r) => ({ id: r.userId, label: `${r.name} ${r.surname}` }) */
+  /** Custom mapping function - e.g: (r) => ({ id: r.userId, label: `${r.name} ${r.surname}` }) */
   map: (row: T) => any;
 };
 
 /**
- * i18n metin çevirileri - Comprehensive multilingual support
+ * i18n text translations - Comprehensive multilingual support
  */
 export type i18nStrings = {
-  /** Trigger placeholder - "Seçiniz" */
+  /** Trigger placeholder - "Please select" */
   triggerPlaceholder?: string;
-  /** Arama placeholder - "Ara" */
+  /** Search placeholder - "Search" */
   searchPlaceholder?: string;
-  /** Onay butonu - "Uygula" */
+  /** Confirm button - "Apply" */
   confirmText?: string;
-  /** İptal butonu - "Vazgeç" */
+  /** Cancel button - "Cancel" */
   cancelText?: string;
-  /** Modal başlığı - "Kayıt Seç" */
+  /** Modal title - "Select Record" */
   modalTitle?: string;
-  /** Boş durum metni - "Kayıt bulunamadı" */
+  /** Empty state text - "No records found" */
   emptyText?: string;
-  /** Yükleniyor metni - "Yükleniyor..." */
+  /** Loading text - "Loading..." */
   loadingText?: string;
-  /** Hata durumu öneki - "Hata:" */
+  /** Error state prefix - "Error:" */
   errorPrefix?: string;
-  /** Seçilen sayısı - "{n} seçildi" */
+  /** Selected count - "{n} selected" */
   selectedCount?: (n: number) => string;
-  /** Temizle butonu - "Temizle" */
+  /** Clear button - "Clear" */
   clearText?: string;
-  /** Tümünü seç checkbox aria-label */
+  /** Select all checkbox aria-label */
   selectAllLabel?: string;
-  /** Satır seçim checkbox aria-label */
+  /** Row selection checkbox aria-label */
   selectRowLabel?: (rowText: string) => string;
-  /** Sıralama butonu aria-label */
+  /** Sort button aria-label */
   sortColumnLabel?: (columnTitle: string) => string;
-  /** Modal kapatma butonu aria-label */
+  /** Modal close button aria-label */
   closeModalLabel?: string;
-  /** Sayfalama bilgisi - "Sayfa {current} / {total}" */
+  /** Pagination info - "Page {current} / {total}" */
   paginationInfo?: (current: number, total: number) => string;
-  /** Toplam kayıt sayısı - "{total} kayıt" */
+  /** Total record count - "{total} records" */
   totalRecords?: (total: number) => string;
-  /** Sayfa boyutu seçici - "{size} kayıt göster" */
+  /** Page size selector - "Show {size} records" */
   pageSize?: (size: number) => string;
-  /** İlk sayfa - "İlk" */
+  /** First page - "First" */
   firstPage?: string;
-  /** Son sayfa - "Son" */
+  /** Last page - "Last" */
   lastPage?: string;
-  /** Önceki sayfa - "Önceki" */
+  /** Previous page - "Previous" */
   previousPage?: string;
-  /** Sonraki sayfa - "Sonraki" */
+  /** Next page - "Next" */
   nextPage?: string;
-  /** Arama sonuç bilgisi - "{count} sonuç bulundu" */
+  /** Search result info - "{count} results found" */
   searchResults?: (count: number) => string;
-  /** Filtre temizleme - "Filtreleri temizle" */
+  /** Clear filters - "Clear filters" */
   clearFilters?: string;
 };
 
 /**
- * Bileşen override'ları - headless çekirdek korunur
+ * Component overrides - preserves headless core
  */
 export type ComponentsOverrides = {
-  /** Custom trigger bileşeni */
+  /** Custom trigger component */
   Trigger?: React.ComponentType<any>;
-  /** Custom modal bileşeni */
+  /** Custom modal component */
   Modal?: React.ComponentType<any>;
-  /** Custom grid bileşeni */
+  /** Custom grid component */
   Grid?: React.ComponentType<any>;
-  /** Custom checkbox bileşeni */
+  /** Custom checkbox component */
   Checkbox?: React.ComponentType<any>;
-  /** Custom icon bileşeni */
+  /** Custom icon component */
   Icon?: React.ComponentType<any>;
 };
 
 /**
- * CSS sınıf adları - her parçada sınıf override
+ * CSS class names - class override for each part
  */
 export type ClassNames = {
-  /** Root container sınıfı */
+  /** Root container class */
   root?: string;
-  /** Trigger sınıfı */
+  /** Trigger class */
   trigger?: string;
-  /** Modal sınıfı */
+  /** Modal class */
   modal?: string;
-  /** Header sınıfı */
+  /** Header class */
   header?: string;
-  /** Footer sınıfı */
+  /** Footer class */
   footer?: string;
-  /** Grid sınıfı */
+  /** Grid class */
   grid?: string;
-  /** Row sınıfı */
+  /** Row class */
   row?: string;
-  /** Cell sınıfı */
+  /** Cell class */
   cell?: string;
-  /** Seçili öğe chip/tag sınıfı */
+  /** Selected item chip/tag class */
   tag?: string;
 };
 
 /**
- * Inline stil inject alanları
+ * Inline style injection areas
  */
 export type Styles = Partial<{
-  /** Root container stilleri */
+  /** Root container styles */
   root: React.CSSProperties;
-  /** Trigger stilleri */
+  /** Trigger styles */
   trigger: React.CSSProperties;
-  /** Modal stilleri */
+  /** Modal styles */
   modal: React.CSSProperties;
-  /** Header stilleri */
+  /** Header styles */
   header: React.CSSProperties;
-  /** Footer stilleri */
+  /** Footer styles */
   footer: React.CSSProperties;
-  /** Grid stilleri */
+  /** Grid styles */
   grid: React.CSSProperties;
-  /** Row stilleri */
+  /** Row styles */
   row: React.CSSProperties;
-  /** Cell stilleri */
+  /** Cell styles */
   cell: React.CSSProperties;
-  /** Tag stilleri */
+  /** Tag styles */
   tag: React.CSSProperties;
 }>;
 
 /**
- * Tema token'ları - CSS değişkenleri ile köprülenebilir
+ * Theme tokens - can be bridged with CSS variables
  */
 export type ThemeTokens = Partial<{
-  /** Ana renk */
+  /** Primary color */
   colorPrimary: string;
-  /** Arka plan rengi */
+  /** Background color */
   colorBg: string;
-  /** Metin rengi */
+  /** Text color */
   colorText: string;
-  /** Köşe yuvarlaklığı */
+  /** Border radius */
   borderRadius: string | number;
-  /** Boşluk çarpanı */
+  /** Spacing multiplier */
   spacing: number;
 }>;
 
 /**
- * LookupSelect bileşeninin ana props arayüzü
- * @template T - Veri türü
+ * Main LookupSelect component props interface
+ * @template T - Data type
  */
 export type LookupSelectProps<T> = {
-  // === Temel Özellikler ===
-  /** Seçim modu - default: 'single' */
+  // === Core Features ===
+  /** Selection mode - default: 'single' */
   mode?: SelectMode;
-  /** Client-side veri dizisi */
+  /** Client-side data array */
   data?: T[];
-  /** Server-side veri kaynağı fonksiyonu */
+  /** Server-side data source function */
   dataSource?: DataSourceFn<T>;
-  /** Grid kolonları tanımı */
+  /** Grid columns definition */
   columns: ColumnDef<T>[];
-  /** ID/text/disabled üreticisi */
+  /** ID/text/disabled generator */
   mapper: ValueMapper<T>;
 
-  // === Değer Kontrolü (controlled/uncontrolled) ===
-  /** Controlled değer */
+  // === Value Control (controlled/uncontrolled) ===
+  /** Controlled value */
   value?: T | T[] | null;
-  /** Uncontrolled başlangıç değeri */
+  /** Uncontrolled initial value */
   defaultValue?: T | T[] | null;
-  /** Değer değişiklik callback'i - dönüş değeri şekline göre */
+  /** Value change callback - according to return shape */
   onChange?: (val: any) => void;
 
-  // === Dönüş Şekli ===
-  /** Dönüş değeri formatı - 'id-text' (default) | 'row' | 'custom' */
+  // === Return Shape ===
+  /** Return value format - 'id-text' (default) | 'row' | 'custom' */
   returnShape?: ReturnShape;
-  /** Custom dönüş mapping'i - sadece 'custom' için */
+  /** Custom return mapping - only for 'custom' */
   returnMap?: ReturnMap<T>;
 
   // === Modal & Trigger ===
-  /** Controlled modal durumu */
+  /** Controlled modal state */
   open?: boolean;
-  /** Uncontrolled modal başlangıç durumu */
+  /** Uncontrolled modal initial state */
   defaultOpen?: boolean;
-  /** Modal durum değişiklik callback'i */
+  /** Modal state change callback */
   onOpenChange?: (open: boolean) => void;
-  /** Modal başlığı - i18n.modalTitle override */
+  /** Modal title - i18n.modalTitle override */
   modalTitle?: string;
-  /** Trigger ikonu override */
+  /** Trigger icon override */
   icon?: ReactNode;
-  /** Tamamen custom trigger render fonksiyonu */
+  /** Completely custom trigger render function */
   renderTrigger?: (selected: T | T[] | null) => ReactNode;
 
-  // === Grid Davranışı ===
-  /** Row bazlı seçim kısıtı fonksiyonu */
+  // === Grid Behavior ===
+  /** Row-based selection constraint function */
   selectableRow?: (row: T) => boolean;
-  /** Büyük data için virtualization aktif mi? */
+  /** Is virtualization active for large data? */
   virtualization?: boolean;
-  /** Virtual grid için sabit satır yüksekliği (px) - default: 40 */
+  /** Fixed row height for virtual grid (px) - default: 40 */
   virtualRowHeight?: number;
-  /** Görünür alan dışında render edilecek ek satır sayısı - default: 5 */
+  /** Number of extra rows to render outside visible area - default: 5 */
   virtualOverscan?: number;
-  /** Virtual container yüksekliği (px) - default: 400 */
+  /** Virtual container height (px) - default: 400 */
   virtualContainerHeight?: number;
-  /** Virtualization threshold - bu sayıdan fazla item'da aktif olur - default: 100 */
+  /** Virtualization threshold - activates with more items than this number - default: 100 */
   virtualThreshold?: number;
-  /** Sayfa boyutu - default 20 */
+  /** Page size - default 20 */
   pageSize?: number;
 
-  // === Temalandırma ===
-  /** Önceden tanımlanmış tema */
+  // === Theming ===
+  /** Predefined theme */
   variant?: Theme;
-  /** Boyut variant'ı */
+  /** Size variant */
   size?: Size;
-  /** CSS sınıf adları */
+  /** CSS class names */
   classNames?: ClassNames;
-  /** Inline stiller */
+  /** Inline styles */
   styles?: Styles;
-  /** Tema token'ları */
+  /** Theme tokens */
   theme?: ThemeTokens;
-  /** Düşük seviyede bileşen override'ları */
+  /** Low level component overrides */
   components?: ComponentsOverrides;
 
   // === i18n ===
-  /** Metin çevirileri */
+  /** Text translations */
   i18n?: i18nStrings;
 
-  // === Event'ler ===
-  /** Search/sort/page değişiklik callback'i */
+  // === Events ===
+  /** Search/sort/page change callback */
   onQueryChange?: (q: QueryState) => void;
-  /** "Uygula" butonu callback'i */
+  /** "Apply" button callback */
   onConfirm?: (val: any) => void;
-  /** Modal kapatma callback'i */
+  /** Modal close callback */
   onCancel?: () => void;
-  /** Modal içi seçim değişiklik callback'i */
+  /** Modal internal selection change callback */
   onSelectionChange?: (rows: T[]) => void;
 };

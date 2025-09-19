@@ -2,8 +2,7 @@ import React from 'react';
 import { ColumnDef, ValueMapper, SelectMode } from '../internal/types';
 
 /**
- * Grid bileşeni - Basit tablo + kolon render
- * Project.md Faz 5: Satır seçimi (tıklama, checkbox), boş durum, yükleniyor, hata
+ * Grid component - Simple table + column render
  */
 
 interface GridProps<T> {
@@ -39,7 +38,7 @@ export function Grid<T>({
   currentSort,
   loading = false,
   error,
-  emptyText = 'Kayıt bulunamadı',
+  emptyText = 'No records found',
   className,
   style,
 }: GridProps<T>) {
@@ -72,7 +71,7 @@ export function Grid<T>({
     return (
       <div className="lookup-select__grid-state">
         <div className="lookup-select__loading">
-          <p>Yükleniyor...</p>
+          <p>Loading...</p>
         </div>
       </div>
     );
@@ -83,7 +82,7 @@ export function Grid<T>({
     return (
       <div className="lookup-select__grid-state">
         <div className="lookup-select__error">
-          <p>Hata: {error}</p>
+          <p>Error: {error}</p>
         </div>
       </div>
     );
@@ -101,17 +100,17 @@ export function Grid<T>({
   }
 
   const handleRowClick = (row: T, event: React.MouseEvent) => {
-    // Checkbox tıklandığında row click'i tetikleme
+    // Don't trigger row click when checkbox is clicked
     if ((event.target as HTMLElement).closest('.lookup-select__checkbox')) {
       return;
     }
 
-    // Selectable kontrolü
+    // Selectable check
     if (selectableRow && !selectableRow(row)) {
       return;
     }
 
-    // Disabled row kontrolü
+    // Disabled row check
     if (mapper.getDisabled?.(row)) {
       return;
     }
@@ -126,12 +125,12 @@ export function Grid<T>({
   ) => {
     event.stopPropagation();
 
-    // Selectable kontrolü
+    // Selectable check
     if (selectableRow && !selectableRow(row)) {
       return;
     }
 
-    // Disabled row kontrolü
+    // Disabled row check
     if (mapper.getDisabled?.(row)) {
       return;
     }
@@ -150,7 +149,7 @@ export function Grid<T>({
       <table
         className="lookup-select__table"
         role="grid"
-        aria-label="Kayıt listesi"
+        aria-label="Record list"
         aria-rowcount={data.length}
         aria-multiselectable={mode === 'multiple'}
       >
@@ -193,7 +192,7 @@ export function Grid<T>({
                         });
                       }
                     }}
-                    aria-label="Tümünü seç"
+                    aria-label="Select all"
                   />
                 </div>
               </th>
@@ -216,7 +215,7 @@ export function Grid<T>({
                     <button
                       type="button"
                       className="lookup-select__sort-button"
-                      aria-label={`${column.title} kolonuna göre sırala`}
+                      aria-label={`Sort by ${column.title} column`}
                       onClick={() => handleSort(String(column.key))}
                     >
                       {getSortIcon(String(column.key))}
@@ -253,7 +252,7 @@ export function Grid<T>({
                   }
                 }}
                 aria-label={
-                  disabled ? undefined : `${mapper.getText(row)} satırını seç`
+                  disabled ? undefined : `Select ${mapper.getText(row)} row`
                 }
               >
                 {/* Checkbox cell for multiple mode */}
@@ -265,7 +264,7 @@ export function Grid<T>({
                         checked={selected}
                         onChange={(e) => handleCheckboxChange(row, e)}
                         disabled={disabled}
-                        aria-label={`${mapper.getText(row)} seç`}
+                        aria-label={`Select ${mapper.getText(row)}`}
                       />
                     </div>
                   </td>

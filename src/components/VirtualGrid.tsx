@@ -124,7 +124,7 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
     return (
       <div className="lookup-select__grid-state">
         <div className="lookup-select__loading">
-          <p>Yükleniyor...</p>
+          <p>Loading...</p>
         </div>
       </div>
     );
@@ -135,7 +135,7 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
     return (
       <div className="lookup-select__grid-state">
         <div className="lookup-select__error">
-          <p>Hata: {error}</p>
+          <p>Error: {error}</p>
         </div>
       </div>
     );
@@ -218,7 +218,7 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
                         selectedRows.forEach((row) => onRowToggle(row));
                       }
                     }}
-                    aria-label="Tümünü seç"
+                    aria-label="Select all"
                   />
                 </th>
               )}
@@ -234,7 +234,7 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
                       <button
                         type="button"
                         className="lookup-select__sort-button"
-                        aria-label={`${column.title} kolonuna göre sırala`}
+                        aria-label={`Sort by ${column.title} column`}
                         onClick={() => handleSort(String(column.key))}
                       >
                         {getSortIcon(String(column.key))}

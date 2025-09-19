@@ -14,7 +14,6 @@ import { Pagination } from './Pagination';
 
 /**
  * LookupSelect - Headless React lookup select component with modal and grid
- * Project.md Faz 4: UI katmanı implementasyonu
  */
 export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   const {
@@ -58,25 +57,24 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
 
   // i18n defaults - comprehensive multilingual support
   const texts = {
-    triggerPlaceholder: 'Seçiniz',
-    searchPlaceholder: 'Ara...',
-    confirmText: 'Uygula',
-    cancelText: 'Vazgeç',
-    modalTitle: 'Kayıt Seç',
-    emptyText: 'Kayıt bulunamadı',
-    loadingText: 'Yükleniyor...',
-    errorPrefix: 'Hata:',
-    selectedCount: (n: number) => `${n} seçildi`,
-    clearText: 'Temizle',
-    selectAllLabel: 'Tümünü seç',
-    selectRowLabel: (rowText: string) => `${rowText} seçeneğini seç`,
-    sortColumnLabel: (columnTitle: string) =>
-      `${columnTitle} kolonuna göre sırala`,
-    closeModalLabel: 'Modalı kapat',
+    triggerPlaceholder: 'Please select',
+    searchPlaceholder: 'Search...',
+    confirmText: 'Apply',
+    cancelText: 'Cancel',
+    modalTitle: 'Select Record',
+    emptyText: 'No records found',
+    loadingText: 'Loading...',
+    errorPrefix: 'Error:',
+    selectedCount: (n: number) => `${n} selected`,
+    clearText: 'Clear',
+    selectAllLabel: 'Select all',
+    selectRowLabel: (rowText: string) => `Select ${rowText} option`,
+    sortColumnLabel: (columnTitle: string) => `Sort by ${columnTitle} column`,
+    closeModalLabel: 'Close modal',
     paginationInfo: (current: number, total: number) =>
-      `Sayfa ${current} / ${total}`,
-    totalRecords: (total: number) => `${total} kayıt`,
-    searchResults: (count: number) => `${count} sonuç bulundu`,
+      `Page ${current} / ${total}`,
+    totalRecords: (total: number) => `${total} records`,
+    searchResults: (count: number) => `${count} results found`,
     ...i18n,
   };
 
@@ -149,7 +147,6 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   // Data source - client vs server-side
   const currentData = dataSource ? serverData : filteredData;
 
-  // Server-side data loading - Faz 6 implementasyonu
   const loadServerData = React.useCallback(async () => {
     if (!dataSource) return;
 
@@ -170,7 +167,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
       setLoading(false);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : 'Veri yüklenirken hata oluştu'
+        err instanceof Error ? err.message : 'Error occurred while loading data'
       );
       setLoading(false);
     }
@@ -360,7 +357,6 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
           placeholder={texts.searchPlaceholder}
         />
 
-        {/* Grid Body - Faz 5 implementasyonu tamamlandı */}
         <div className="lookup-select__modal-content">
           {renderGrid()}
 

@@ -3,14 +3,14 @@ import { LookupSelectProps, QueryState } from './types';
 import { SelectionManager, QueryManager, mapReturnValue } from './core';
 
 /**
- * State makinesi: idle → modalOpen → selecting → confirming/cancelled
- * Project.md Bölüm 3: Controlled/Uncontrolled davranış
+ * State machine: idle → modalOpen → selecting → confirming/cancelled
+ * Project.md Section 3: Controlled/Uncontrolled behavior
  */
 
 export type ModalState = 'closed' | 'open';
 
 /**
- * Ana state hook - controlled/uncontrolled davranış
+ * Main state hook - controlled/uncontrolled behavior
  */
 export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
   const {

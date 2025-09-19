@@ -1,6 +1,6 @@
 {
-  "name": "onur-react-lookup-select",
-  "version": "1.0.1",
+  "name": "react-lookup-select",
+  "version": "1.0.0",
   "license": "MIT",
   "type": "module",
   "sideEffects": [

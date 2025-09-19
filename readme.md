@@ -1,4 +1,4 @@
-# onur-react-lookup-select
+# react-lookup-select
 
 A headless, customizable React lookup select component with modal and grid support for single/multiple selection.
 
@@ -16,12 +16,12 @@ A headless, customizable React lookup select component with modal and grid suppo
 ## Installation
 
 ```bash
-npm i onur-react-lookup-select
+npm i react-lookup-select
 ```
 
 ```tsx
-import { LookupSelect } from 'onur-react-lookup-select';
-import 'onur-react-lookup-select/styles.css';
+import { LookupSelect } from 'react-lookup-select';
+import 'react-lookup-select/styles.css';
 ```
 
 ## Example Usage

@@ -124,9 +124,9 @@ export function Trigger<T>({
             }}
             aria-label="Clear selection"
           >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path
-                d="M8.25 3.75L3.75 8.25M3.75 3.75L8.25 8.25"
+                d="M10.5 5.5L5.5 10.5M5.5 5.5L10.5 10.5"
                 stroke="currentColor"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -139,12 +139,14 @@ export function Trigger<T>({
         {/* Dropdown icon */}
         <div className="lookup-select__trigger-icon">
           {icon || (
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path
-                d="M3 4.5L6 7.5L9 4.5"
+                d="M4 6L8 10L12 6"
                 stroke="currentColor"
-                strokeWidth="1"
+                strokeWidth="1.5"
                 fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
           )}

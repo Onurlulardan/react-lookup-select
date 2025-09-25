@@ -161,6 +161,136 @@ export type i18nStrings = {
 };
 
 /**
+ * Render Props Interfaces - for custom rendering functions
+ */
+export type ModalRenderProps<T> = {
+  /** Is modal open? */
+  isOpen: boolean;
+  /** Close modal callback */
+  onClose: () => void;
+  /** Modal content */
+  children: ReactNode;
+  /** Modal title */
+  title?: string;
+  /** Loading state */
+  loading?: boolean;
+  /** Error message */
+  error?: string | null;
+  /** Current query state */
+  query?: QueryState;
+  /** Selected items count */
+  selectedCount: number;
+  /** Total items count */
+  totalCount: number;
+};
+
+export type GridRenderProps<T> = {
+  /** Grid data */
+  data: T[];
+  /** Column definitions */
+  columns: ColumnDef<T>[];
+  /** Selected row IDs */
+  selectedIds: (string | number)[];
+  /** Row selection callback */
+  onRowSelect: (row: T) => void;
+  /** Select all callback */
+  onSelectAll?: () => void;
+  /** Clear all selections callback */
+  onClearAll?: () => void;
+  /** Loading state */
+  loading?: boolean;
+  /** Error state */
+  error?: string | null;
+  /** Selection mode */
+  mode: SelectMode;
+  /** Value mapper */
+  mapper: ValueMapper<T>;
+  /** Virtualization config */
+  virtualization?: VirtualizationConfig;
+  /** Row selectability checker */
+  selectableRow?: (row: T) => boolean;
+  /** Sort change callback */
+  onSortChange?: (sortBy: string, sortDir: 'asc' | 'desc') => void;
+  /** Current sort state */
+  sortBy?: string;
+  sortDir?: 'asc' | 'desc';
+};
+
+export type HeaderRenderProps<T> = {
+  /** Current search value */
+  searchValue: string;
+  /** Search change callback */
+  onSearchChange: (value: string) => void;
+  /** Total items count */
+  totalCount: number;
+  /** Selected items count */
+  selectedCount: number;
+  /** Clear all selections callback */
+  onClearAll: () => void;
+  /** Modal title */
+  title?: string;
+  /** Close modal callback */
+  onClose: () => void;
+  /** Loading state */
+  loading?: boolean;
+};
+
+export type FooterRenderProps<T> = {
+  /** Selected items count */
+  selectedCount: number;
+  /** Total items count */
+  totalCount: number;
+  /** Confirm selection callback */
+  onConfirm: () => void;
+  /** Cancel selection callback */
+  onCancel: () => void;
+  /** Current page info */
+  currentPage: number;
+  /** Total pages */
+  totalPages: number;
+  /** Page change callback */
+  onPageChange: (page: number) => void;
+  /** Page size */
+  pageSize: number;
+  /** Page size change callback */
+  onPageSizeChange?: (size: number) => void;
+  /** Loading state */
+  loading?: boolean;
+  /** Selection mode */
+  mode: SelectMode;
+};
+
+export type SearchRenderProps = {
+  /** Current search value */
+  value: string;
+  /** Search change callback */
+  onChange: (value: string) => void;
+  /** Search placeholder */
+  placeholder?: string;
+  /** Loading state */
+  loading?: boolean;
+  /** Clear search callback */
+  onClear?: () => void;
+};
+
+export type PaginationRenderProps = {
+  /** Current page (1-indexed) */
+  currentPage: number;
+  /** Total pages */
+  totalPages: number;
+  /** Page change callback */
+  onPageChange: (page: number) => void;
+  /** Page size */
+  pageSize: number;
+  /** Page size change callback */
+  onPageSizeChange?: (size: number) => void;
+  /** Total items count */
+  totalCount: number;
+  /** Loading state */
+  loading?: boolean;
+};
+
+/**
  * Component overrides - preserves headless core
  */
 export type ComponentsOverrides = {
@@ -284,6 +414,20 @@ export type LookupSelectProps<T> = {
   icon?: ReactNode;
   /** Completely custom trigger render function */
   renderTrigger?: (selected: T | T[] | null) => ReactNode;
+
+  // === Custom Rendering Functions ===
+  /** Custom modal render function */
+  renderModal?: (props: ModalRenderProps<T>) => ReactNode;
+  /** Custom grid render function */
+  renderGrid?: (props: GridRenderProps<T>) => ReactNode;
+  /** Custom header render function */
+  renderHeader?: (props: HeaderRenderProps<T>) => ReactNode;
+  /** Custom footer render function */
+  renderFooter?: (props: FooterRenderProps<T>) => ReactNode;
+  /** Custom search input render function */
+  renderSearch?: (props: SearchRenderProps) => ReactNode;
+  /** Custom pagination render function */
+  renderPagination?: (props: PaginationRenderProps) => ReactNode;
 
   // === Grid Behavior ===
   /** Row-based selection constraint function */

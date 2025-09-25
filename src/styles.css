@@ -131,20 +131,7 @@
   box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2), var(--lookup-select-shadow);
 }
 
-.lookup-select__trigger--open {
-  border-color: var(--lookup-select-color-border-focus);
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2), var(--lookup-select-shadow);
-}
 
-.lookup-select__trigger--disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  background: var(--lookup-select-color-bg-secondary);
-}
-
-.lookup-select__trigger--error {
-  border-color: var(--lookup-select-color-error);
-}
 
 .lookup-select__trigger-content {
   flex: 1;
@@ -194,55 +181,74 @@
   transition: transform var(--lookup-select-transition-duration) var(--lookup-select-transition-timing);
 }
 
-.lookup-select__trigger--open .lookup-select__trigger-icon {
-  transform: rotate(180deg);
+
+
+/* Trigger content styles */
+.lookup-select__placeholder {
+  color: var(--lookup-select-color-text-muted);
+  font-style: italic;
 }
 
-/* Selected items styling */
-.lookup-select__selected-items {
-  display: flex;
-  align-items: center;
-  gap: var(--lookup-select-spacing-sm);
-  flex-wrap: wrap;
-  min-width: 0;
-}
-
-.lookup-select__selected-item {
-  display: inline-flex;
-  align-items: center;
-  background: var(--lookup-select-color-primary);
-  color: white;
-  padding: 2px var(--lookup-select-spacing-sm);
-  border-radius: var(--lookup-select-border-radius-sm);
-  font-size: var(--lookup-select-font-size-sm);
+.lookup-select__selected-text {
+  color: var(--lookup-select-color-text);
   font-weight: var(--lookup-select-font-weight-medium);
-  max-width: 120px;
-}
-
-.lookup-select__selected-item-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.lookup-select__selected-item--more {
-  background: var(--lookup-select-color-text-secondary);
+
+
+/* === TAGS (Multi-select trigger) === */
+.lookup-select__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lookup-select-spacing-sm);
+  align-items: center;
 }
 
-.lookup-select__selected-item-remove {
-  background: none;
+.lookup-select__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lookup-select-spacing-sm);
+  background: var(--lookup-select-color-bg-secondary);
+  color: var(--lookup-select-color-text);
+  padding: 4px 8px;
+  border-radius: var(--lookup-select-border-radius);
+  font-size: var(--lookup-select-font-size-sm);
+  font-weight: var(--lookup-select-font-weight-medium);
+  border: 1px solid var(--lookup-select-color-border);
+  max-width: 120px;
+}
+
+.lookup-select__tag--more {
+  background: var(--lookup-select-color-primary);
+  color: white;
+  border-color: var(--lookup-select-color-primary);
+}
+
+.lookup-select__tag-remove {
+  background: rgba(0, 0, 0, 0.1);
   border: none;
-  color: inherit;
-  margin-left: var(--lookup-select-spacing-sm);
+  color: currentColor;
   cursor: pointer;
-  padding: 0;
-  font-size: var(--lookup-select-font-size);
+  padding: 2px 4px;
+  font-size: 12px;
   line-height: 1;
-  opacity: 0.8;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--lookup-select-transition-duration) var(--lookup-select-transition-timing);
+  opacity: 0.7;
 }
 
-.lookup-select__selected-item-remove:hover {
+.lookup-select__tag-remove:hover {
+  background: rgba(0, 0, 0, 0.2);
   opacity: 1;
+  transform: scale(1.1);
 }
 
 /* === MODAL === */
@@ -256,7 +262,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--lookup-select-z-index-overlay);
   padding: 20px;
 }
 
@@ -358,11 +364,7 @@
   padding: calc(var(--lookup-select-spacing) * 2);
 }
 
-.lookup-select__grid-placeholder {
-  text-align: center;
-  color: #6b7280;
-  padding: calc(var(--lookup-select-spacing) * 4);
-}
+
 
 /* === MODAL FOOTER === */
 .lookup-select__modal-footer {
@@ -799,19 +801,7 @@
   background: var(--lookup-select-color-bg-hover);
 }
 
-.lookup-select__virtual-row--selected {
-  background: rgba(0, 102, 204, 0.1);
-  border-left: 3px solid var(--lookup-select-color-primary);
-}
 
-.lookup-select__virtual-row--disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.lookup-select__virtual-row--disabled:hover {
-  background: transparent;
-}
 
 .lookup-select__virtual-row .lookup-select__table {
   width: 100%;

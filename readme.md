@@ -193,6 +193,168 @@ const dataSource = async (q: QueryState) => {
 />
 ```
 
+## Custom Rendering with Render Props
+
+### Overview
+
+The LookupSelect component supports complete customization through render props, allowing you to integrate with any UI library (Ant Design, Material-UI, etc.) or create custom designs.
+
+### Available Render Props
+
+- `renderTrigger` - Customize the trigger button
+- `renderModal` - Customize the modal container
+- `renderGrid` - Customize the data grid
+- `renderHeader` - Customize the modal header
+- `renderFooter` - Customize the modal footer
+- `renderSearch` - Customize the search input
+- `renderPagination` - Customize pagination controls
+
+### Custom Modal Example
+
+```tsx
+<LookupSelect
+  data={users}
+  columns={columns}
+  mapper={mapper}
+  renderModal={({ isOpen, onClose, children, title, selectedCount }) => {
+    if (!isOpen) return null;
+
+    return (
+      <div className="custom-modal-overlay" onClick={onClose}>
+        <div className="custom-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h2>{title}</h2>
+            {selectedCount > 0 && (
+              <span className="selection-count">{selectedCount} selected</span>
+            )}
+            <button onClick={onClose}>×</button>
+          </div>
+          {children}
+        </div>
+      </div>
+    );
+  }}
+/>
+```
+
+### Custom Grid with Cards
+
+```tsx
+<LookupSelect
+  data={users}
+  columns={columns}
+  mapper={mapper}
+  renderGrid={({ data, selectedIds, onRowSelect, mapper }) => (
+    <div className="card-grid">
+      {data.map((user) => {
+        const isSelected = selectedIds.includes(mapper.getId(user));
+        return (
+          <div
+            key={mapper.getId(user)}
+            className={`user-card ${isSelected ? 'selected' : ''}`}
+            onClick={() => onRowSelect(user)}
+          >
+            <img src={user.avatar} alt={user.name} />
+            <h3>{user.name}</h3>
+            <p>{user.email}</p>
+            <span className="role">{user.role}</span>
+          </div>
+        );
+      })}
+    </div>
+  )}
+/>
+```
+
+### Ant Design Integration
+
+```tsx
+import { Modal, Table, Input, Button } from 'antd';
+
+<LookupSelect
+  data={users}
+  columns={columns}
+  mapper={mapper}
+  renderModal={({ isOpen, onClose, children }) => (
+    <Modal
+      open={isOpen}
+      onCancel={onClose}
+      title="Select Users"
+      width={800}
+      footer={null}
+    >
+      {children}
+    </Modal>
+  )}
+  renderGrid={({ data, columns, selectedRowKeys, onRowSelect }) => (
+    <Table
+      dataSource={data}
+      columns={columns}
+      rowSelection={{
+        selectedRowKeys,
+        onChange: onRowSelect,
+      }}
+      pagination={false}
+    />
+  )}
+  renderSearch={({ value, onChange, placeholder }) => (
+    <Input.Search
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      style={{ marginBottom: 16 }}
+    />
+  )}
+/>;
+```
+
+### Material-UI Integration
+
+```tsx
+import { Dialog, DataGrid, TextField, Chip } from '@mui/material';
+
+<LookupSelect
+  data={users}
+  columns={columns}
+  mapper={mapper}
+  renderModal={({ isOpen, onClose, children }) => (
+    <Dialog open={isOpen} onClose={onClose} maxWidth="md" fullWidth>
+      {children}
+    </Dialog>
+  )}
+  renderGrid={({ data, columns, onRowSelect }) => (
+    <DataGrid
+      rows={data}
+      columns={columns}
+      onRowSelectionModelChange={onRowSelect}
+      checkboxSelection
+    />
+  )}
+/>;
+```
+
+### TypeScript Support for Render Props
+
+```tsx
+import type {
+  ModalRenderProps,
+  GridRenderProps,
+  SearchRenderProps,
+} from 'react-lookup-select';
+
+const CustomModal = ({ isOpen, onClose, children }: ModalRenderProps<User>) => {
+  // Your custom modal implementation
+};
+
+const CustomGrid = ({
+  data,
+  selectedIds,
+  onRowSelect,
+}: GridRenderProps<User>) => {
+  // Your custom grid implementation
+};
+```
+
 ## Virtualization - Large Data Performance
 
 ### Auto Virtualization

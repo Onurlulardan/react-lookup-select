@@ -26,6 +26,12 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     size = 'medium',
     icon,
     renderTrigger,
+    renderModal,
+    renderGrid,
+    renderHeader,
+    renderFooter,
+    renderSearch,
+    renderPagination,
     modalTitle,
     classNames,
     styles,
@@ -229,7 +235,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   );
 
   // Grid component with current data - Performance optimized with useCallback
-  const renderGrid = React.useCallback(() => {
+  const renderGridComponent = React.useCallback(() => {
     const commonGridProps = {
       data: currentData,
       columns,
@@ -283,6 +289,121 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     shouldUseVirtualization,
     virtualizationConfig,
   ]);
+
+  // Custom render prop helpers
+  const renderModalContent = () => {
+    // Default modal content
+    const defaultContent = (
+      <>
+        {/* Search Input */}
+        {renderSearch ? (
+          renderSearch({
+            value: searchValue,
+            onChange: handleSearchChange,
+            placeholder: texts.searchPlaceholder,
+            loading,
+            onClear: () => handleSearchChange(''),
+          })
+        ) : (
+          <SearchInput
+            value={searchValue}
+            onChange={handleSearchChange}
+            placeholder={texts.searchPlaceholder}
+          />
+        )}
+
+        <div className="lookup-select__modal-content">
+          {renderGrid
+            ? renderGrid({
+                data: currentData,
+                columns,
+                selectedIds: currentSelections.map(mapper.getId),
+                onRowSelect: toggleRowSelection,
+                onSelectAll:
+                  mode === 'multiple'
+                    ? () => {
+                        // Toggle all rows
+                        const allIds = currentData.map(mapper.getId);
+                        const selectedIds = currentSelections.map(mapper.getId);
+                        if (allIds.length === selectedIds.length) {
+                          clearSelections();
+                        } else {
+                          currentData.forEach((row) => {
+                            if (!isRowSelected(row)) {
+                              toggleRowSelection(row);
+                            }
+                          });
+                        }
+                      }
+                    : undefined,
+                onClearAll: clearSelections,
+                loading,
+                error,
+                mode,
+                mapper,
+                virtualization: shouldUseVirtualization
+                  ? virtualizationConfig
+                  : undefined,
+                selectableRow,
+                onSortChange: handleSortChange,
+                sortBy: getCurrentQuery().sortBy,
+                sortDir: getCurrentQuery().sortDir,
+              })
+            : renderGridComponent()}
+
+          {/* Pagination - only for server-side data */}
+          {dataSource && !renderPagination && (
+            <Pagination
+              currentPage={currentPage}
+              totalCount={totalCount}
+              pageSize={optimizedPageSize}
+              onPageChange={handlePageChange}
+            />
+          )}
+
+          {dataSource &&
+            renderPagination &&
+            renderPagination({
+              currentPage,
+              totalPages: Math.ceil(totalCount / optimizedPageSize),
+              onPageChange: handlePageChange,
+              pageSize: optimizedPageSize,
+              onPageSizeChange: (newSize) => {
+                // Page size change logic can be added here
+              },
+              totalCount,
+              loading,
+            })}
+        </div>
+
+        {/* Footer */}
+        {renderFooter ? (
+          renderFooter({
+            selectedCount: currentSelections.length,
+            totalCount,
+            onConfirm: confirmSelection,
+            onCancel: cancelSelection,
+            currentPage,
+            totalPages: Math.ceil(totalCount / optimizedPageSize),
+            onPageChange: handlePageChange,
+            pageSize: optimizedPageSize,
+            loading,
+            mode,
+          })
+        ) : (
+          <ModalFooter
+            onConfirm={confirmSelection}
+            onCancel={cancelSelection}
+            confirmText={texts.confirmText}
+            cancelText={texts.cancelText}
+            selectedCount={currentSelections.length}
+          />
+        )}
+      </>
+    );
+
+    return defaultContent;
+  };
 
   // Generate theme class names
   const getThemeClasses = () => {
@@ -343,43 +464,29 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
         onRemoveTag={(item) => toggleRowSelection(item)}
       />
 
-      <Modal
-        isOpen={modalOpen}
-        onClose={cancelSelection}
-        title={modalTitle || texts.modalTitle}
-        className={classNames?.modal}
-        style={styles?.modal}
-      >
-        {/* Search Input */}
-        <SearchInput
-          value={searchValue}
-          onChange={handleSearchChange}
-          placeholder={texts.searchPlaceholder}
-        />
-
-        <div className="lookup-select__modal-content">
-          {renderGrid()}
-
-          {/* Pagination - only for server-side data */}
-          {dataSource && (
-            <Pagination
-              currentPage={currentPage}
-              totalCount={totalCount}
-              pageSize={optimizedPageSize}
-              onPageChange={handlePageChange}
-            />
-          )}
-        </div>
-
-        {/* Footer */}
-        <ModalFooter
-          onConfirm={confirmSelection}
-          onCancel={cancelSelection}
-          confirmText={texts.confirmText}
-          cancelText={texts.cancelText}
-          selectedCount={currentSelections.length}
-        />
-      </Modal>
+      {renderModal ? (
+        renderModal({
+          isOpen: modalOpen,
+          onClose: cancelSelection,
+          children: renderModalContent(),
+          title: modalTitle || texts.modalTitle,
+          loading,
+          error,
+          query: getCurrentQuery(),
+          selectedCount: currentSelections.length,
+          totalCount,
+        })
+      ) : (
+        <Modal
+          isOpen={modalOpen}
+          onClose={cancelSelection}
+          title={modalTitle || texts.modalTitle}
+          className={classNames?.modal}
+          style={styles?.modal}
+        >
+          {renderModalContent()}
+        </Modal>
+      )}
     </div>
   );
 }

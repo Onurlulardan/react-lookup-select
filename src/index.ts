@@ -22,4 +22,12 @@ export type {
   ClassNames,
   Styles,
   ThemeTokens,
+
+  // Render Props Interfaces
+  ModalRenderProps,
+  GridRenderProps,
+  HeaderRenderProps,
+  FooterRenderProps,
+  SearchRenderProps,
+  PaginationRenderProps,
 } from './internal/types';

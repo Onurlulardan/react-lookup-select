@@ -126,17 +126,25 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
       const newState = selectionManager.toggleRow(row);
       const selectedRows = selectionManager.getSelectedRows();
       setCurrentSelections(selectedRows);
-      onSelectionChange?.(selectedRows);
+
+      // Modal açıkken onChange tetikleme - sadece geçici selection state güncelle
+      // onChange sadece confirmSelection'da tetiklenecek
+      if (!modalOpen) {
+        onSelectionChange?.(selectedRows);
+      }
     },
-    [selectionManager, onSelectionChange]
+    [selectionManager, onSelectionChange, modalOpen]
   );
 
   // Clear all selections
   const clearSelections = useCallback(() => {
     selectionManager.clearSelection();
     setCurrentSelections([]);
-    onSelectionChange?.([]);
-  }, [selectionManager, onSelectionChange]);
+
+    if (!modalOpen) {
+      onSelectionChange?.([]);
+    }
+  }, [selectionManager, onSelectionChange, modalOpen]);
 
   // Check if row is selected
   const isRowSelected = useCallback(

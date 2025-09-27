@@ -58,6 +58,9 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
   // Current selections state
   const [currentSelections, setCurrentSelections] = useState<T[]>([]);
 
+  // Backup selections when modal opens
+  const [backupSelections, setBackupSelections] = useState<T[]>([]);
+
   // Helper function to resolve value objects to actual data rows
   const resolveValueToRows = useCallback(
     (valueToResolve: any): T[] => {
@@ -193,22 +196,33 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
 
   // Cancel selection (Close modal without applying)
   const cancelSelection = useCallback(() => {
-    // Reset selections to original value
     selectionManager.clearSelection();
-    setCurrentSelections([]);
+
+    for (const row of backupSelections) {
+      selectionManager.toggleRow(row);
+    }
+
+    setCurrentSelections([...backupSelections]);
     onCancel?.();
     handleModalOpenChange(false);
-  }, [selectionManager, onCancel, handleModalOpenChange]);
+  }, [selectionManager, backupSelections, onCancel, handleModalOpenChange]);
 
   // Get current query state
   const getCurrentQuery = useCallback(() => {
     return queryManager.getState();
   }, [queryManager]);
 
+  // Modal open with backup
+  const openModal = useCallback(() => {
+    // Modal açılırken mevcut seçimleri backup al
+    setBackupSelections([...currentSelections]);
+    handleModalOpenChange(true);
+  }, [currentSelections, handleModalOpenChange]);
+
   return {
     // Modal state
     modalOpen,
-    openModal: () => handleModalOpenChange(true),
+    openModal,
     closeModal: () => handleModalOpenChange(false),
 
     // Selection state

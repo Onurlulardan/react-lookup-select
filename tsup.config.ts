@@ -8,6 +8,8 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   external: ['react', 'react-dom'],
-  // CSS dosyasını da kopyala
-  onSuccess: 'cp src/styles.css dist/styles.css',
+  onSuccess: async () => {
+    const fs = await import('fs');
+    fs.copyFileSync('src/styles.css', 'dist/styles.css');
+  },
 });

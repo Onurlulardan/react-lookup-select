@@ -109,7 +109,6 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
 
   useKeyboardNavigation({
     isModalOpen: modalOpen,
-    onClose: closeModal,
     onConfirm: confirmSelection,
     currentData: [],
     selectedRows: currentSelections,
@@ -125,14 +124,47 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   const [serverData, setServerData] = React.useState<T[]>([]);
   const [totalCount, setTotalCount] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [sortState, setSortState] = React.useState<{
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
+  }>({});
+
+  // Debounced search value for server-side data (prevents fetch on every keystroke)
+  const [debouncedSearch, setDebouncedSearch] = React.useState('');
+  const debounceTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleSearchChange = React.useCallback(
     (value: string) => {
       setSearchValue(value);
-      updateQuery({ search: value, page: 1 }); // Reset to page 1 on search
+
+      if (dataSource) {
+        // Debounce server-side search (300ms)
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        debounceTimerRef.current = setTimeout(() => {
+          setDebouncedSearch(value);
+          setCurrentPage(1);
+          updateQuery({ search: value, page: 1 });
+        }, 300);
+      } else {
+        // Client-side filtering: immediate
+        updateQuery({ search: value, page: 1 });
+      }
     },
-    [updateQuery]
-  ); // Filtered data - client-side filtering if data provided
+    [updateQuery, dataSource]
+  );
+
+  // Cleanup debounce timer
+  React.useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  // Filtered data - client-side filtering if data provided
   const filteredData = React.useMemo(() => {
     if (!searchValue || dataSource) {
       return data;
@@ -160,13 +192,14 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     setError(undefined);
 
     try {
-      const query = getCurrentQuery();
-      const result = await dataSource({
-        ...query,
-        search: searchValue,
+      const query = {
+        search: debouncedSearch,
         page: currentPage,
         pageSize: optimizedPageSize,
-      });
+        sortBy: sortState.sortBy,
+        sortDir: sortState.sortDir,
+      };
+      const result = await dataSource(query);
 
       setServerData(result.rows);
       setTotalCount(result.total);
@@ -179,10 +212,10 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     }
   }, [
     dataSource,
-    getCurrentQuery,
-    searchValue,
+    debouncedSearch,
     currentPage,
     optimizedPageSize,
+    sortState,
   ]);
 
   // Load data when modal opens or query changes
@@ -204,8 +237,9 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   // Sort change handler
   const handleSortChange = React.useCallback(
     (sortBy: string, sortDir: 'asc' | 'desc') => {
-      updateQuery({ sortBy, sortDir, page: 1 }); // Reset to page 1 on sort
+      setSortState({ sortBy, sortDir });
       setCurrentPage(1);
+      updateQuery({ sortBy, sortDir, page: 1 });
     },
     [updateQuery]
   );
@@ -248,12 +282,13 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
       loading,
       error,
       emptyText: texts.emptyText,
+      onRetry: dataSource ? loadServerData : undefined,
       className: classNames?.grid,
       style: styles?.grid,
       currentSort: dataSource
         ? {
-            sortBy: getCurrentQuery().sortBy || '',
-            sortDir: getCurrentQuery().sortDir || 'asc',
+            sortBy: sortState.sortBy || '',
+            sortDir: sortState.sortDir || 'asc',
           }
         : undefined,
       onSort: dataSource ? handleSortChange : undefined,
@@ -322,13 +357,17 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
                 onSelectAll:
                   mode === 'multiple'
                     ? () => {
-                        // Toggle all rows
-                        const allIds = currentData.map(mapper.getId);
-                        const selectedIds = currentSelections.map(mapper.getId);
-                        if (allIds.length === selectedIds.length) {
+                        // Toggle all selectable rows
+                        const selectableData = selectableRow
+                          ? currentData.filter(selectableRow)
+                          : currentData;
+                        const allSelected = selectableData.every((row) =>
+                          isRowSelected(row)
+                        );
+                        if (allSelected) {
                           clearSelections();
                         } else {
-                          currentData.forEach((row) => {
+                          selectableData.forEach((row) => {
                             if (!isRowSelected(row)) {
                               toggleRowSelection(row);
                             }
@@ -346,8 +385,8 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
                   : undefined,
                 selectableRow,
                 onSortChange: handleSortChange,
-                sortBy: getCurrentQuery().sortBy,
-                sortDir: getCurrentQuery().sortDir,
+                sortBy: sortState.sortBy,
+                sortDir: sortState.sortDir,
               })
             : renderGridComponent()}
 
@@ -358,6 +397,13 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
               totalCount={totalCount}
               pageSize={optimizedPageSize}
               onPageChange={handlePageChange}
+              i18n={{
+                previousPage: i18n?.previousPage,
+                nextPage: i18n?.nextPage,
+                pageLabel: i18n?.paginationInfo
+                  ? (pageNum) => i18n.paginationInfo!(pageNum, Math.ceil(totalCount / optimizedPageSize))
+                  : undefined,
+              }}
             />
           )}
 

@@ -861,3 +861,98 @@
   outline: 2px solid var(--lookup-select-color-primary);
   outline-offset: 2px;
 }
+
+/* === SKELETON LOADING === */
+.lookup-select__grid-row--skeleton {
+  pointer-events: none;
+}
+
+.lookup-select__skeleton-line {
+  height: 14px;
+  width: 70%;
+  background: linear-gradient(
+    90deg,
+    var(--lookup-select-color-bg-secondary) 25%,
+    var(--lookup-select-color-bg-hover) 50%,
+    var(--lookup-select-color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: lookup-select-skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+.lookup-select__grid-row--skeleton:nth-child(odd) .lookup-select__skeleton-line {
+  width: 85%;
+}
+
+.lookup-select__grid-row--skeleton:nth-child(3n) .lookup-select__skeleton-line {
+  width: 60%;
+}
+
+@keyframes lookup-select-skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* === ERROR RETRY === */
+.lookup-select__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--lookup-select-spacing);
+}
+
+/* === STICKY GRID HEADER === */
+.lookup-select__table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--lookup-select-color-bg-secondary);
+}
+
+.lookup-select__table thead th {
+  border-bottom: 2px solid var(--lookup-select-color-border);
+}
+
+/* === MOBILE RESPONSIVE MODAL === */
+@media (max-width: 767px) {
+  .lookup-select__modal-overlay {
+    align-items: flex-end;
+  }
+
+  .lookup-select__modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh;
+    border-radius: var(--lookup-select-border-radius)
+      var(--lookup-select-border-radius) 0 0;
+    margin: 0;
+  }
+
+  .lookup-select__modal-content {
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+
+  /* Touch-friendly targets (WCAG 2.5.8: min 44px) */
+  .lookup-select__grid-row {
+    min-height: 48px;
+  }
+
+  .lookup-select__pagination-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .lookup-select__checkbox {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .lookup-select__modal {
+    width: 90% !important;
+    max-width: 90% !important;
+  }
+}

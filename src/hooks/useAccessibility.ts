@@ -7,10 +7,6 @@ import { useEffect, useCallback } from 'react';
 export function useKeyboardNavigation({
   isModalOpen,
   onConfirm,
-  onRowSelect,
-  currentData,
-  selectedRows,
-  mode,
 }: {
   isModalOpen: boolean;
   onConfirm?: () => void;

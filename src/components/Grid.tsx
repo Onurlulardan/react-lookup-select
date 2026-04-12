@@ -235,7 +235,7 @@ export function Grid<T>({
             )}
 
             {/* Column headers */}
-            {columns.map((column, index) => (
+            {columns.map((column) => (
               <th
                 key={
                   typeof column.key === 'string'
@@ -307,7 +307,7 @@ export function Grid<T>({
                 )}
 
                 {/* Data cells */}
-                {columns.map((column, columnIndex) => {
+                {columns.map((column) => {
                   const cellKey = `${rowId}-${typeof column.key === 'string' ? column.key : String(column.key)}`;
                   let cellContent;
 

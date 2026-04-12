@@ -296,9 +296,11 @@ function VirtualRowComponent<T>({
   item,
   columns,
   mode,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   mapper,
   isSelected,
   isSelectable,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onToggle,
   onCheckboxChange,
   onClick,

@@ -132,7 +132,7 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
   // Toggle row selection
   const toggleRowSelection = useCallback(
     (row: T) => {
-      const newState = selectionManager.toggleRow(row);
+      selectionManager.toggleRow(row);
       const selectedRows = selectionManager.getSelectedRows();
       setCurrentSelections(selectedRows);
 
@@ -166,9 +166,6 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
   // Query state updates
   const updateQuery = useCallback(
     (updates: Partial<QueryState>) => {
-      const currentState = queryManager.getState();
-      const newState = { ...currentState, ...updates };
-
       if (updates.search !== undefined) {
         queryManager.updateSearch(updates.search);
       }

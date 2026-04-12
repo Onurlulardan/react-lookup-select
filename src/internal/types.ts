@@ -163,6 +163,7 @@ export type i18nStrings = {
 /**
  * Render Props Interfaces - for custom rendering functions
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type ModalRenderProps<T> = {
   /** Is modal open? */
   isOpen: boolean;
@@ -216,6 +217,7 @@ export type GridRenderProps<T> = {
   sortDir?: 'asc' | 'desc';
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type HeaderRenderProps<T> = {
   /** Current search value */
   searchValue: string;
@@ -235,6 +237,7 @@ export type HeaderRenderProps<T> = {
   loading?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type FooterRenderProps<T> = {
   /** Selected items count */
   selectedCount: number;

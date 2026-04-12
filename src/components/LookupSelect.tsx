@@ -28,7 +28,6 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
     renderTrigger,
     renderModal,
     renderGrid,
-    renderHeader,
     renderFooter,
     renderSearch,
     renderPagination,
@@ -50,7 +49,6 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   const {
     modalOpen,
     openModal,
-    closeModal,
     currentSelections,
     toggleRowSelection,
     clearSelections,
@@ -103,7 +101,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
   ]);
 
   // Accessibility hooks
-  const { announce } = useScreenReaderAnnouncements();
+  useScreenReaderAnnouncements();
 
   useFocusManagement(modalOpen);
 
@@ -414,7 +412,7 @@ export function LookupSelect<T = any>(props: LookupSelectProps<T>) {
               totalPages: Math.ceil(totalCount / optimizedPageSize),
               onPageChange: handlePageChange,
               pageSize: optimizedPageSize,
-              onPageSizeChange: (newSize) => {
+              onPageSizeChange: (_newSize) => {
                 // Page size change logic can be added here
               },
               totalCount,

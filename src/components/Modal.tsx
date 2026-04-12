@@ -41,13 +41,20 @@ export function Modal({
     // Store currently focused element
     previousFocusRef.current = document.activeElement as HTMLElement;
 
-    // Focus first focusable element in modal
-    const focusableElements = modalRef.current?.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
+    // Focus [data-autofocus] first, then first focusable element
+    const autoFocusElement = modalRef.current?.querySelector(
+      '[data-autofocus]'
+    ) as HTMLElement | null;
 
-    if (focusableElements && focusableElements.length > 0) {
-      (focusableElements[0] as HTMLElement).focus();
+    if (autoFocusElement) {
+      autoFocusElement.focus();
+    } else {
+      const focusableElements = modalRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusableElements && focusableElements.length > 0) {
+        (focusableElements[0] as HTMLElement).focus();
+      }
     }
 
     // Handle Escape key
@@ -180,25 +187,16 @@ export function SearchInput({
   placeholder = 'Search...',
   className,
 }: SearchInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  // Auto focus on mount
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, []);
-
   return (
     <div className={`lookup-select__search ${className || ''}`}>
       <input
-        ref={inputRef}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="lookup-select__search-input"
         aria-label="Search records"
+        data-autofocus
       />
       <div className="lookup-select__search-icon">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">

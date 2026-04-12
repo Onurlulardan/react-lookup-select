@@ -291,20 +291,9 @@ export type PaginationRenderProps = {
 };
 
 /**
- * Component overrides - preserves headless core
+ * @deprecated Use render props (renderTrigger, renderModal, renderGrid) instead.
+ * Removed: component overrides were declared but never implemented.
  */
-export type ComponentsOverrides = {
-  /** Custom trigger component */
-  Trigger?: React.ComponentType<any>;
-  /** Custom modal component */
-  Modal?: React.ComponentType<any>;
-  /** Custom grid component */
-  Grid?: React.ComponentType<any>;
-  /** Custom checkbox component */
-  Checkbox?: React.ComponentType<any>;
-  /** Custom icon component */
-  Icon?: React.ComponentType<any>;
-};
 
 /**
  * CSS class names - class override for each part
@@ -456,8 +445,6 @@ export type LookupSelectProps<T> = {
   styles?: Styles;
   /** Theme tokens */
   theme?: ThemeTokens;
-  /** Low level component overrides */
-  components?: ComponentsOverrides;
 
   // === i18n ===
   /** Text translations */

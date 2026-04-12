@@ -76,14 +76,18 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
     }
   }, []);
 
-  // Handle header checkbox indeterminate state
+  // Handle header checkbox indeterminate state (respects selectableRow)
+  const selectableCount = React.useMemo(() => {
+    return selectableRow ? data.filter(selectableRow).length : data.length;
+  }, [data, selectableRow]);
+
   React.useEffect(() => {
     if (headerCheckboxRef.current) {
       const hasSelected = selectedRows.length > 0;
-      const hasUnselected = selectedRows.length < data.length;
+      const hasUnselected = selectedRows.length < selectableCount;
       headerCheckboxRef.current.indeterminate = hasSelected && hasUnselected;
     }
-  }, [selectedRows.length, data.length]);
+  }, [selectedRows.length, selectableCount]);
 
   // Calculate visible range
   const itemCount = data.length;
@@ -200,7 +204,8 @@ export function VirtualGrid<T = any>(props: VirtualGridProps<T>) {
                     type="checkbox"
                     className="lookup-select__checkbox"
                     checked={
-                      selectedRows.length === data.length && data.length > 0
+                      selectedRows.length === selectableCount &&
+                      selectableCount > 0
                     }
                     onChange={(e) => {
                       if (e.target.checked) {

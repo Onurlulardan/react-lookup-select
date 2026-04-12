@@ -18,7 +18,6 @@ export type {
 
   // Theming and Customization
   i18nStrings,
-  ComponentsOverrides,
   ClassNames,
   Styles,
   ThemeTokens,

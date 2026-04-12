@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { LookupSelectProps, QueryState } from './types';
 import { SelectionManager, QueryManager, mapReturnValue } from './core';
 
@@ -45,15 +45,19 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
     [open, onOpenChange]
   );
 
-  // Selection manager
-  const selectionManager = useMemo(() => {
-    return new SelectionManager(mode, mapper);
-  }, [mode, mapper]);
+  // Selection manager (useRef guarantees referential stability unlike useMemo)
+  const selectionManagerRef = useRef<SelectionManager<T> | null>(null);
+  if (!selectionManagerRef.current) {
+    selectionManagerRef.current = new SelectionManager(mode, mapper);
+  }
+  const selectionManager = selectionManagerRef.current;
 
-  // Query manager
-  const queryManager = useMemo(() => {
-    return new QueryManager({ pageSize });
-  }, [pageSize]);
+  // Query manager (useRef guarantees referential stability unlike useMemo)
+  const queryManagerRef = useRef<QueryManager | null>(null);
+  if (!queryManagerRef.current) {
+    queryManagerRef.current = new QueryManager({ pageSize });
+  }
+  const queryManager = queryManagerRef.current;
 
   // Current selections state
   const [currentSelections, setCurrentSelections] = useState<T[]>([]);
@@ -91,6 +95,11 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
           );
           if (matchingRow) {
             resolvedRows.push(matchingRow);
+          } else if (typeof console !== 'undefined') {
+            console.warn(
+              `[react-lookup-select] Could not resolve value with id "${searchId}" from data. ` +
+              `Ensure the value matches an item in the data array.`
+            );
           }
         }
       }
@@ -127,8 +136,8 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
       const selectedRows = selectionManager.getSelectedRows();
       setCurrentSelections(selectedRows);
 
-      // Modal açıkken onChange tetikleme - sadece geçici selection state güncelle
-      // onChange sadece confirmSelection'da tetiklenecek
+      // Don't trigger onChange while modal is open - only update temporary selection state
+      // onChange will be triggered in confirmSelection
       if (!modalOpen) {
         onSelectionChange?.(selectedRows);
       }
@@ -222,7 +231,7 @@ export function useLookupSelectState<T>(props: LookupSelectProps<T>) {
 
   // Modal open with backup
   const openModal = useCallback(() => {
-    // Modal açılırken mevcut seçimleri backup al
+    // Backup current selections when modal opens
     setBackupSelections([...currentSelections]);
     handleModalOpenChange(true);
   }, [currentSelections, handleModalOpenChange]);

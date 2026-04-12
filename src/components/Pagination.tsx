@@ -2,10 +2,6 @@ import React from 'react';
 
 /**
  * Pagination component - pagination for server-side data
- * Project.md Phas              }}
-              onClick={() => onPageChange(pageNum)}
-              aria-label={`Page ${pageNum}`}
-              aria-current={currentPage === pageNum ? 'page' : undefined} total, page synchronization
  */
 
 interface PaginationProps {
@@ -14,6 +10,12 @@ interface PaginationProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   className?: string;
+  i18n?: {
+    previousPage?: string;
+    nextPage?: string;
+    pageLabel?: (pageNum: number) => string;
+    recordsInfo?: (start: number, end: number, total: number) => string;
+  };
 }
 
 export function Pagination({
@@ -22,6 +24,7 @@ export function Pagination({
   pageSize,
   onPageChange,
   className,
+  i18n,
 }: PaginationProps) {
   const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -67,13 +70,11 @@ export function Pagination({
   return (
     <div className={`lookup-select__pagination ${className || ''}`}>
       <div className="lookup-select__pagination-info">
-        {totalCount > 0 ? (
-          <>
-            {startRecord}-{endRecord} / {totalCount} records
-          </>
-        ) : (
-          '0 records'
-        )}
+        {totalCount > 0
+          ? (i18n?.recordsInfo
+              ? i18n.recordsInfo(startRecord, endRecord, totalCount)
+              : `${startRecord}-${endRecord} / ${totalCount} records`)
+          : '0 records'}
       </div>
 
       <div className="lookup-select__pagination-controls">
@@ -83,7 +84,7 @@ export function Pagination({
           className="lookup-select__pagination-button"
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
-          aria-label="Previous page"
+          aria-label={i18n?.previousPage || 'Previous page'}
         >
           ‹
         </button>
@@ -111,7 +112,7 @@ export function Pagination({
                 ${currentPage === pageNum ? 'lookup-select__pagination-button--active' : ''}
               `}
               onClick={() => onPageChange(pageNum)}
-              aria-label={`Sayfa ${pageNum}`}
+              aria-label={i18n?.pageLabel ? i18n.pageLabel(pageNum) : `Page ${pageNum}`}
               aria-current={currentPage === pageNum ? 'page' : undefined}
             >
               {pageNum}
@@ -125,7 +126,7 @@ export function Pagination({
           className="lookup-select__pagination-button"
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
-          aria-label="Next page"
+          aria-label={i18n?.nextPage || 'Next page'}
         >
           ›
         </button>

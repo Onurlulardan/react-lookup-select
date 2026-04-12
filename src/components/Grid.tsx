@@ -20,6 +20,7 @@ interface GridProps<T> {
   loading?: boolean;
   error?: string;
   emptyText?: string;
+  onRetry?: () => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -39,6 +40,7 @@ export function Grid<T>({
   loading = false,
   error,
   emptyText = 'No records found',
+  onRetry,
   className,
   style,
 }: GridProps<T>) {
@@ -66,23 +68,57 @@ export function Grid<T>({
     return currentSort.sortDir === 'asc' ? '↑' : '↓';
   };
 
-  // Loading state
+  // Loading state - skeleton rows
   if (loading) {
     return (
-      <div className="lookup-select__grid-state">
-        <div className="lookup-select__loading">
-          <p>Loading...</p>
-        </div>
+      <div className={`lookup-select__grid ${className || ''}`} style={style}>
+        <table className="lookup-select__table">
+          <thead>
+            <tr>
+              {mode === 'multiple' && (
+                <th className="lookup-select__header-cell lookup-select__header-cell--checkbox" />
+              )}
+              {columns.map((column) => (
+                <th key={String(column.key)} className="lookup-select__header-cell">
+                  {column.title}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <tr key={i} className="lookup-select__grid-row lookup-select__grid-row--skeleton">
+                {mode === 'multiple' && (
+                  <td className="lookup-select__cell" />
+                )}
+                {columns.map((col, j) => (
+                  <td key={j} className="lookup-select__cell">
+                    <div className="lookup-select__skeleton-line" />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
 
-  // Error state
+  // Error state with retry
   if (error) {
     return (
       <div className="lookup-select__grid-state">
         <div className="lookup-select__error">
           <p>Error: {error}</p>
+          {onRetry && (
+            <button
+              type="button"
+              className="lookup-select__button lookup-select__button--secondary"
+              onClick={onRetry}
+            >
+              Retry
+            </button>
+          )}
         </div>
       </div>
     );
